@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e9e7dc">
+    <title>Архивные ID-карты граждан империи</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light;
+            --paper: #f6f7f4;
+            --ink: #20251f;
+            --muted: #626659;
+            --green: #244c3d;
+            --green-light: #d4dfd1;
+            --red: #a74637;
+            --line: rgba(32, 37, 31, 0.12);
+            --serif: "Playfair Display", Georgia, serif;
+            --sans: "DM Sans", "Segoe UI", sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            position: relative;
+            isolation: isolate;
+            background-color: var(--paper);
+            background-image: radial-gradient(ellipse at 100% 0%, rgba(36, 76, 61, 0.06), transparent 45%), radial-gradient(ellipse at 0% 100%, rgba(167, 70, 55, 0.04), transparent 40%);
+            color: var(--ink);
+            font-family: var(--sans);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            position: fixed;
+            right: -24px;
+            bottom: -92px;
+            z-index: -1;
+            content: "ШКИ";
+            color: rgba(36, 76, 61, 0.035);
+            font-family: var(--serif);
+            font-size: 260px;
+            line-height: 1;
+            pointer-events: none;
+            transform: rotate(-12deg);
+        }
+
+        .auth-screen { min-height: 100svh; display: grid; place-items: center; padding: 32px 6%; }
+        .auth-layout { width: min(1040px, 100%); display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(36px, 7vw, 90px); align-items: center; }
+        .auth-intro { min-height: 420px; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 0; }
+        .auth-brand { display: flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+        .auth-brand-seal { width: 40px; aspect-ratio: 1; display: grid; place-items: center; border: 1px solid var(--green); border-radius: 50%; color: var(--green); font-family: var(--serif); font-size: 22px; }
+        .auth-brand-title { display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+        .auth-brand-subtitle { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+        .auth-copy { max-width: 480px; }
+        .auth-kicker { color: var(--red); font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+        .auth-copy h1 { margin: 16px 0; font-family: var(--serif); font-size: clamp(42px, 5vw, 66px); font-weight: 500; line-height: 1.02; }
+        .auth-copy h1 span { color: var(--green); font-style: italic; }
+        .auth-copy p { max-width: 390px; margin: 0; color: #5f625a; font-size: 13px; line-height: 1.8; }
+        .auth-archive-mark { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .auth-archive-mark::before { width: 26px; height: 1px; content: ""; background: var(--red); }
+        .auth-panel { padding: 28px 0 24px 30px; border-left: 1px solid var(--line); }
+        .auth-tabs { display: flex; gap: 18px; margin-bottom: 24px; border-bottom: 1px solid var(--line); }
+        .auth-tab { min-height: 42px; padding: 0 2px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); font: 600 11px var(--sans); cursor: pointer; }
+        .auth-tab[aria-selected="true"] { border-bottom-color: var(--green); color: var(--green); }
+        .auth-tab:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+        .auth-form { display: grid; gap: 13px; }
+        .auth-form[hidden], .auth-screen[hidden], .view-tab[hidden] { display: none; }
+        .auth-field select, .admin-staff-role { width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid var(--line); border-radius: 2px; background: rgba(255, 255, 255, 0.2); color: var(--ink); font: 12px var(--sans); text-transform: none; letter-spacing: 0; }
+        .auth-field select:focus-visible, .admin-staff-role:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+        .admin-subtitle { margin: 34px 0 6px; font-family: var(--serif); font-size: 22px; font-weight: 500; }
+        .admin-staff { display: grid; margin: 12px 0 0; padding: 0; list-style: none; }
+        .admin-staff-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 220px) auto; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 12px; }
+        .admin-staff-role { min-height: 36px; }
+        .admin-kick { min-height: 36px; padding: 0 12px; border: 1px solid var(--red); border-radius: 2px; background: transparent; color: var(--red); font: 600 10px var(--sans); cursor: pointer; }
+        .admin-kick:hover:not(:disabled) { background: rgba(167, 70, 55, 0.1); }
+        .admin-kick:disabled { opacity: 0.35; cursor: not-allowed; }
+        @media (max-width: 760px) { .admin-staff-row { grid-template-columns: 1fr; } }
+        .auth-message:not(:empty) { padding: 10px 12px; border: 1px solid var(--red); border-radius: 2px; background: rgba(167, 70, 55, 0.08); font-size: 12px; }
+        .auth-field { display: grid; gap: 6px; color: #666a61; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .auth-field input { width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid var(--line); border-radius: 2px; background: rgba(255, 255, 255, 0.2); color: var(--ink); font: 12px var(--sans); text-transform: none; letter-spacing: 0; }
+        .auth-field input[type="file"] { padding: 9px; }
+        .auth-field input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+        .auth-submit { min-height: 44px; margin-top: 4px; border: 1px solid var(--green); border-radius: 2px; background: var(--green); color: #f2eee0; font: 600 11px var(--sans); cursor: pointer; }
+        .auth-submit:hover { background: #1b3f32; }
+        .auth-submit:disabled { opacity: 0.55; cursor: wait; }
+        .auth-message { min-height: 18px; margin: 14px 0 0; color: var(--red); font-size: 10px; line-height: 1.5; }
+        .auth-footnote { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; line-height: 1.6; }
+        .top-session { display: flex; align-items: center; gap: 18px; }
+        .top-session[hidden] { display: none; }
+        .session-name { max-width: 180px; overflow: hidden; color: #5f625a; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+        .logout-button { min-height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--ink); font: 600 9px var(--sans); cursor: pointer; }
+        .logout-button:hover { border-color: var(--red); }
+
+        .auth-screen { min-height: 100svh; display: grid; place-items: center; padding: 32px 6%; }
+        .auth-layout { width: min(1040px, 100%); display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(36px, 7vw, 90px); align-items: center; }
+        .auth-intro { position: relative; min-height: 420px; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 0; }
+        .auth-brand { display: flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+        .auth-brand-seal { width: 40px; aspect-ratio: 1; display: grid; place-items: center; border: 1px solid var(--green); border-radius: 50%; color: var(--green); font-family: var(--serif); font-size: 22px; }
+        .auth-brand-title { display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+        .auth-brand-subtitle { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+        .auth-copy { max-width: 480px; }
+        .auth-kicker { color: var(--red); font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+        .auth-copy h1 { margin: 16px 0; font-family: var(--serif); font-size: clamp(42px, 5vw, 66px); font-weight: 500; line-height: 1.02; }
+        .auth-copy h1 span { color: var(--green); font-style: italic; }
+        .auth-copy p { max-width: 390px; margin: 0; color: #5f625a; font-size: 13px; line-height: 1.8; }
+        .auth-archive-mark { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .auth-archive-mark::before { width: 26px; height: 1px; content: ""; background: var(--red); }
+        .auth-panel { padding: 28px 0 24px 30px; border-left: 1px solid var(--line); }
+        .auth-tabs { display: flex; gap: 18px; margin-bottom: 24px; border-bottom: 1px solid var(--line); }
+        .auth-tab { min-height: 42px; padding: 0 2px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); font: 600 11px var(--sans); cursor: pointer; }
+        .auth-tab[aria-selected="true"] { border-bottom-color: var(--green); color: var(--green); }
+        .auth-tab:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+        .auth-form { display: grid; gap: 13px; }
+        .auth-form[hidden] { display: none; }
+        .auth-field { display: grid; gap: 6px; color: #666a61; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .auth-field input { width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid var(--line); border-radius: 2px; background: rgba(255, 255, 255, 0.2); color: var(--ink); font: 12px var(--sans); text-transform: none; letter-spacing: 0; }
+        .auth-field input[type="file"] { padding: 9px; }
+        .auth-field input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+        .auth-submit { min-height: 44px; margin-top: 4px; border: 1px solid var(--green); border-radius: 2px; background: var(--green); color: #f2eee0; font: 600 11px var(--sans); cursor: pointer; }
+        .auth-submit:hover { background: #1b3f32; }
+        .auth-submit:disabled { opacity: 0.55; cursor: wait; }
+        .auth-message { min-height: 18px; margin: 14px 0 0; color: var(--red); font-size: 10px; line-height: 1.5; }
+        .auth-footnote { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; line-height: 1.6; }
+        .top-session { display: flex; align-items: center; gap: 18px; }
+        .top-session[hidden] { display: none; }
+        .session-name { max-width: 180px; overflow: hidden; color: #5f625a; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+        .logout-button { min-height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--ink); font: 600 9px var(--sans); cursor: pointer; }
+        .logout-button:hover { border-color: var(--red); }
+        .passport-edit { min-height: 34px; margin-top: 8px; padding: 0 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 2px; background: rgba(255, 255, 255, 0.08); color: #f2eee0; font: 600 8px var(--sans); cursor: pointer; }
+        .passport-edit:hover { background: rgba(255, 255, 255, 0.16); }
+        .passport-edit[hidden] { display: none; }
+
+        .page-shell {
+            width: min(1440px, 100%);
+            margin: 0 auto;
+            padding: 0 6.25%;
+            overflow: hidden;
+        }
+
+        .page-shell[hidden] { display: none; }
+
+        .topbar {
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--line);
+            animation: fade-down 700ms both;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-seal {
+            width: 37px;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--green);
+            border-radius: 50%;
+            color: var(--green);
+            font-family: var(--serif);
+            font-size: 21px;
+        }
+
+        .brand-name { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; }
+        .brand-subtitle { margin-top: 3px; color: var(--muted); font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; }
+
+        .top-note {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #5c805e;
+            box-shadow: 0 0 0 4px rgba(92, 128, 94, 0.13);
+        }
+
+        .view-tabs { display: flex; width: fit-content; max-width: 100%; gap: 4px; margin: 20px 0 4px; border-bottom: 1px solid var(--line); }
+        .view-tab { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 9px; padding: 0 16px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); font: 600 11px var(--sans); cursor: pointer; }
+        .view-tab[aria-selected="true"] { border-bottom-color: var(--green); color: var(--green); }
+        .view-tab:focus-visible { outline: 2px solid var(--red); outline-offset: -3px; }
+        .view-tab-count { padding: 3px 6px; border: 1px solid var(--line); border-radius: 2px; color: var(--muted); font-size: 8px; }
+        .view-panel[hidden] { display: none; }
+        .admin-panel { padding: 36px 0; border-bottom: 1px solid var(--line); }
+        .admin-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 7px; }
+        .admin-kicker { color: var(--red); font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+        .admin-title { margin: 5px 0 0; font-family: var(--serif); font-size: 28px; font-weight: 500; }
+        .admin-local-note { max-width: 300px; color: var(--muted); font-size: 10px; line-height: 1.5; text-align: right; }
+        .admin-form { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(140px, 0.6fr) auto; align-items: end; gap: 12px; margin-top: 22px; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .admin-field { display: grid; gap: 7px; color: var(--muted); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .admin-field select, .admin-field input { width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--ink); font: 12px var(--sans); }
+        .admin-field select:focus-visible, .admin-field input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+        .admin-credit-button, .custom-cover-button { min-height: 42px; padding: 0 16px; border: 1px solid var(--green); border-radius: 2px; background: var(--green); color: #f2eee0; font: 600 10px var(--sans); cursor: pointer; }
+        .admin-credit-button:hover, .custom-cover-button:hover { background: #1b3f32; }
+        .admin-credit-button:focus-visible, .custom-cover-button:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+        .admin-status, .custom-cover-status { min-height: 18px; margin: 12px 0; color: var(--muted); font-size: 10px; }
+        .admin-balances { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 18px 0 0; padding: 0; list-style: none; }
+        .admin-balance-row { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); color: #5f625a; font-size: 11px; }
+        .admin-balance-row strong { color: var(--green); font-family: var(--serif); font-size: 16px; font-weight: 500; white-space: nowrap; }
+
+        .hero {
+            min-height: 520px;
+            display: grid;
+            grid-template-columns: 1fr 0.92fr;
+            align-items: center;
+            gap: 5%;
+            padding: 54px 0 65px;
+        }
+
+        .hero-copy { position: relative; z-index: 1; animation: rise-in 850ms 100ms both; }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 24px;
+            color: var(--red);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before { width: 28px; height: 1px; content: ""; background: currentColor; }
+
+        h1 {
+            max-width: 610px;
+            margin: 0;
+            font-family: var(--serif);
+            font-size: clamp(52px, 6.4vw, 88px);
+            font-weight: 500;
+            line-height: 0.99;
+        }
+
+        h1 span { color: var(--green); font-style: italic; }
+
+        .hero-description {
+            max-width: 405px;
+            margin: 26px 0 0;
+            color: #5f625a;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 34px;
+            margin-top: 38px;
+            padding-top: 22px;
+            border-top: 1px solid var(--line);
+        }
+
+        .meta-item strong { display: block; font-family: var(--serif); font-size: 25px; font-weight: 500; }
+        .meta-item span { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+
+        .passport-stage {
+            position: relative;
+            min-width: 0;
+            min-height: 440px;
+            display: grid;
+            place-items: center;
+            animation: rise-in 900ms 240ms both;
+        }
+
+        .stage-orbit {
+            position: absolute;
+            width: min(410px, 91%);
+            aspect-ratio: 1;
+            border: 1px solid rgba(36, 76, 61, 0.2);
+            border-radius: 50%;
+        }
+
+        .stage-orbit::before, .stage-orbit::after {
+            position: absolute;
+            content: "";
+            border: 1px solid rgba(36, 76, 61, 0.13);
+            border-radius: 50%;
+        }
+
+        .stage-orbit::before { inset: 23px; }
+        .stage-orbit::after { inset: 49px; }
+
+        .passport-scene {
+            position: relative;
+            width: min(420px, 100%);
+            aspect-ratio: 1.57;
+            --cover-start: #7b2938;
+            --cover-mid: #641f2e;
+            --cover-end: #481722;
+            --cover-accent: #d6cda9;
+            --cover-texture: radial-gradient(circle at 82% 18%, transparent 0 13%, rgba(241, 211, 143, 0.35) 13.3% 13.8%, transparent 14.2% 21%, rgba(241, 211, 143, 0.24) 21.3% 21.8%, transparent 22.2% 30%), repeating-linear-gradient(45deg, rgba(241, 211, 143, 0.035) 0 1px, transparent 1px 7px);
+            perspective: 1100px;
+            transform: rotate(-5deg);
+            animation: passport-float 6s ease-in-out 1.2s infinite;
+        }
+
+        .passport-scene.theme-aurora { --cover-start: #1e6658; --cover-mid: #174e48; --cover-end: #103b3b; --cover-accent: #bde2cd; --cover-texture: radial-gradient(ellipse at 80% 24%, transparent 0 16%, rgba(189, 226, 205, 0.36) 16.3% 16.8%, transparent 17.2% 27%, rgba(189, 226, 205, 0.2) 27.3% 27.8%, transparent 28.2%), repeating-linear-gradient(132deg, rgba(189, 226, 205, 0.12) 0 1px, transparent 1px 9px); }
+        .passport-scene.theme-saffron { --cover-start: #9a602d; --cover-mid: #784528; --cover-end: #522c21; --cover-accent: #f1d38f; --cover-texture: repeating-conic-gradient(from 12deg at 82% 20%, rgba(241, 211, 143, 0.2) 0deg 3deg, transparent 3deg 17deg), radial-gradient(circle at 82% 20%, transparent 0 12%, rgba(241, 211, 143, 0.35) 12.3% 12.8%, transparent 13.2% 25%); }
+        .passport-scene.theme-tidal { --cover-start: #285c78; --cover-mid: #1d455f; --cover-end: #142f4b; --cover-accent: #b7dfeb; --cover-texture: radial-gradient(ellipse at 76% 112%, transparent 0 18%, rgba(183, 223, 235, 0.34) 18.3% 18.8%, transparent 19.2% 29%, rgba(183, 223, 235, 0.25) 29.3% 29.8%, transparent 30.2% 43%, rgba(183, 223, 235, 0.16) 43.3% 43.8%, transparent 44.2%), repeating-linear-gradient(8deg, rgba(183, 223, 235, 0.06) 0 1px, transparent 1px 9px); }
+        .passport-scene.theme-graphite { --cover-start: #4a4f55; --cover-mid: #353a40; --cover-end: #22262b; --cover-accent: #d3d8de; --cover-texture: repeating-linear-gradient(0deg, rgba(211, 216, 222, 0.07) 0 1px, transparent 1px 10px), repeating-linear-gradient(90deg, rgba(211, 216, 222, 0.07) 0 1px, transparent 1px 10px); }
+        .passport-scene.theme-forest { --cover-start: #4b6b2f; --cover-mid: #38542a; --cover-end: #243a22; --cover-accent: #dbe8a6; --cover-texture: repeating-linear-gradient(120deg, rgba(219, 232, 166, 0.1) 0 2px, transparent 2px 14px), radial-gradient(ellipse at 80% 20%, rgba(219, 232, 166, 0.22), transparent 38%); }
+        .passport-scene.theme-sakura { --cover-start: #c0587a; --cover-mid: #9c3f66; --cover-end: #6e2a4f; --cover-accent: #ffd9e6; --cover-texture: radial-gradient(circle at 85% 18%, rgba(255, 217, 230, 0.3) 0 3px, transparent 4px), radial-gradient(circle at 72% 34%, rgba(255, 217, 230, 0.22) 0 2px, transparent 3px), radial-gradient(circle at 90% 46%, rgba(255, 217, 230, 0.2) 0 2px, transparent 3px), radial-gradient(circle at 78% 14%, transparent 0 14%, rgba(255, 217, 230, 0.28) 14.3% 14.8%, transparent 15.2%); }
+        .passport-scene.theme-lavender { --cover-start: #7a62b5; --cover-mid: #5d4a96; --cover-end: #3f3270; --cover-accent: #e4dcff; --cover-texture: repeating-radial-gradient(circle at 82% 22%, rgba(228, 220, 255, 0.14) 0 2px, transparent 2px 16px), repeating-linear-gradient(60deg, rgba(228, 220, 255, 0.05) 0 1px, transparent 1px 11px); }
+        .passport-scene.theme-midnight { --cover-start: #1c2757; --cover-mid: #131b42; --cover-end: #0a0f2b; --cover-accent: #f4e6a8; --cover-texture: radial-gradient(circle at 12% 22%, rgba(244, 230, 168, 0.8) 0 1px, transparent 2px), radial-gradient(circle at 34% 70%, rgba(244, 230, 168, 0.6) 0 1px, transparent 2px), radial-gradient(circle at 58% 18%, rgba(244, 230, 168, 0.7) 0 1.5px, transparent 2.5px), radial-gradient(circle at 76% 62%, rgba(244, 230, 168, 0.55) 0 1px, transparent 2px), radial-gradient(circle at 90% 30%, rgba(244, 230, 168, 0.8) 0 1.5px, transparent 2.5px), radial-gradient(circle at 80% 18%, transparent 0 13%, rgba(244, 230, 168, 0.28) 13.3% 13.8%, transparent 14.2%); }
+        .passport-scene.theme-ember { --cover-start: #b8401d; --cover-mid: #82260f; --cover-end: #3e1008; --cover-accent: #ffc58a; --cover-texture: radial-gradient(ellipse at 70% 115%, rgba(255, 170, 70, 0.5), transparent 52%), repeating-linear-gradient(172deg, rgba(255, 197, 138, 0.08) 0 2px, transparent 2px 12px); }
+        .passport-scene.theme-custom { --cover-start: #315247; --cover-mid: #263f39; --cover-end: #1b302c; --cover-accent: #d9e8c8; --cover-texture: repeating-linear-gradient(145deg, rgba(217, 232, 200, 0.12) 0 1px, transparent 1px 9px); }
+
+        .passport-rotator {
+            position: absolute;
+            inset: 0;
+            transform-style: preserve-3d;
+            transition: transform 760ms cubic-bezier(0.2, 0.7, 0.2, 1);
+        }
+
+        .passport-scene.is-back .passport-rotator { transform: rotateY(180deg); }
+
+        .passport {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            padding: 18px 22px;
+            overflow: hidden;
+            color: #f2eee0;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            border-radius: 5px;
+            background: var(--cover-texture), linear-gradient(128deg, var(--cover-start) 0%, var(--cover-mid) 61%, var(--cover-end) 100%);
+            box-shadow: 0 30px 55px rgba(32, 48, 38, 0.22), 0 5px 12px rgba(32, 48, 38, 0.1);
+            backface-visibility: hidden;
+        }
+
+        .passport-back { transform: rotateY(180deg); }
+
+        .passport::before {
+            position: absolute;
+            top: -37%;
+            right: -8%;
+            width: 75%;
+            aspect-ratio: 1;
+            content: "";
+            border: 1px solid rgba(231, 221, 184, 0.3);
+            border-radius: 50%;
+            box-shadow: 0 0 0 18px rgba(231, 221, 184, 0.09), 0 0 0 39px rgba(231, 221, 184, 0.065), 0 0 0 61px rgba(231, 221, 184, 0.045);
+        }
+
+        .passport::after {
+            position: absolute;
+            right: -10px;
+            bottom: -28px;
+            content: "Ш";
+            color: rgba(231, 221, 184, 0.08);
+            font-family: var(--serif);
+            font-size: 230px;
+            line-height: 1;
+        }
+
+        .passport-top, .passport-content, .passport-bottom { position: relative; z-index: 1; }
+        .passport-top { display: flex; align-items: flex-start; justify-content: space-between; }
+        .passport-country { font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; }
+        .passport-kind { margin-top: 5px; color: var(--cover-accent); font-family: var(--serif); font-size: 18px; }
+        .theme-sticker { position: absolute; top: 68px; right: 15px; z-index: 2; width: 108px; min-height: 42px; display: grid; place-items: center; padding: 7px 8px; border: 2px dashed var(--cover-accent); background: rgba(20, 22, 20, 0.28); color: var(--cover-accent); font: 700 8px/1.3 var(--sans); text-align: center; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12); transform: rotate(6deg); }
+        .passport-scene[data-theme-id="aurora"] .theme-sticker { border-style: double; border-radius: 14px 3px 14px 3px; transform: rotate(-5deg); }
+        .passport-scene[data-theme-id="saffron"] .theme-sticker { border-style: solid; border-radius: 50% 8px 50% 8px; transform: rotate(7deg); }
+        .passport-scene[data-theme-id="tidal"] .theme-sticker { border-style: dotted; border-radius: 18px; transform: rotate(-4deg); }
+        .passport-scene[data-theme-id="graphite"] .theme-sticker { border-style: solid; border-radius: 0; transform: rotate(-2deg); }
+        .passport-scene[data-theme-id="forest"] .theme-sticker { border-style: dashed; border-radius: 4px 20px 4px 20px; transform: rotate(5deg); }
+        .passport-scene[data-theme-id="sakura"] .theme-sticker { border-style: dotted; border-radius: 50%; transform: rotate(-8deg); }
+        .passport-scene[data-theme-id="lavender"] .theme-sticker { border-style: double; border-radius: 22px; transform: rotate(4deg); }
+        .passport-scene[data-theme-id="midnight"] .theme-sticker { border-style: solid; border-radius: 3px 16px; transform: rotate(-6deg); }
+        .passport-scene[data-theme-id="ember"] .theme-sticker { border-style: dashed; border-width: 3px; border-radius: 10px 2px; transform: rotate(8deg); }
+        .passport-scene[data-theme-id="custom"] .theme-sticker { border-style: double; border-width: 3px; border-radius: 4px; transform: rotate(-3deg); }
+        .passport-scene.theme-custom .passport-front, .passport-scene.theme-custom .passport-back { background-image: linear-gradient(128deg, rgba(var(--custom-cover-rgb, 49, 82, 71), 0.22), rgba(var(--custom-cover-rgb, 49, 82, 71), 0.62)), var(--custom-cover-image, none), var(--cover-texture), linear-gradient(128deg, var(--custom-cover-color, var(--cover-start)), var(--cover-end)); background-position: center; background-size: cover; }
+
+        .passport-scene.theme-custom .passport-back { background-image: linear-gradient(128deg, rgba(var(--custom-cover-rgb, 49, 82, 71), 0.55), rgba(var(--custom-cover-rgb, 49, 82, 71), 0.85)), var(--custom-cover-image, none), var(--cover-texture), linear-gradient(128deg, var(--custom-cover-color, var(--cover-start)), var(--cover-end)); background-position: center; background-size: cover; }
+
+        .passport-emblem {
+            width: 35px;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--cover-accent);
+            border-radius: 50%;
+            color: var(--cover-accent);
+            font-family: var(--serif);
+            font-size: 18px;
+        }
+
+        .passport-content { display: flex; align-items: end; gap: 12px; margin-top: 12px; }
+
+        .portrait-frame {
+            width: 78px;
+            height: 104px;
+            flex: 0 0 auto;
+            overflow: hidden;
+            border: 2px solid rgba(236, 228, 202, 0.8);
+        }
+
+        .portrait {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 50% 35%;
+            filter: saturate(1.05) contrast(1.02);
+        }
+
+        .portrait-closeup { transform: scale(2.8); transform-origin: 60% 40%; }
+
+        .passport-fields { min-width: 0; padding-bottom: 2px; }
+        .field-label { margin-top: 6px; color: #c1c9b8; font-size: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
+        .field-value { margin-top: 2px; font-family: var(--serif); font-size: 13px; white-space: nowrap; }
+        .field-value.small { font-family: var(--sans); font-size: 8px; letter-spacing: 0.06em; }
+        .name-role-row { display: flex; min-width: 0; align-items: baseline; gap: 6px; }
+        .role-badge { margin-left: auto; padding: 2px 5px; border: 1px solid rgba(231, 221, 184, 0.45); color: #ead8ae; font: 600 6px var(--sans); white-space: nowrap; }
+
+        .passport-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            margin-top: 9px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(236, 228, 202, 0.25);
+        }
+
+        .passport-number { color: #d8d0b4; font-size: 8px; letter-spacing: 0.13em; }
+        .passport-warning { color: #f3c7a0; font-size: 6px; font-weight: 700; letter-spacing: 0.12em; }
+
+        .passport-back-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .passport-back-header { display: flex; align-items: center; gap: 12px; }
+        .passport-back-seal { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid #d7bd82; border-radius: 50%; color: #e6d3a8; font-family: var(--serif); font-size: 18px; }
+        .passport-back-heading { color: #e6d3a8; font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; }
+        .passport-back-copy { max-width: 275px; }
+        .passport-back-copy h2 { margin: 7px 0; color: #f2eee0; font-family: var(--serif); font-size: 22px; font-weight: 500; }
+        .passport-back-copy p { max-width: 260px; margin: 0; color: #e1d4c3; font-size: 10px; line-height: 1.6; }
+        .archive-code-panel { padding: 7px 9px; border: 1px dashed rgba(231, 221, 184, 0.38); background: rgba(231, 221, 184, 0.045); }
+        .archive-code-label { display: block; color: #e6d3a8; font-size: 6px; letter-spacing: 0.12em; text-transform: uppercase; }
+        .archive-code { display: block; margin-top: 4px; color: #f2eee0; font: 600 8px/1.7 var(--sans); letter-spacing: 0.06em; overflow-wrap: anywhere; }
+        .passport-back-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid rgba(236, 228, 202, 0.3); }
+        .passport-back-footer span:first-child { color: #d8d0b4; font-size: 7px; letter-spacing: 0.13em; }
+
+        .flip-button {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            z-index: 2;
+            display: inline-flex;
+            min-height: 38px;
+            align-items: center;
+            gap: 8px;
+            padding: 0 14px;
+            transform: translateX(-50%);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            background: var(--paper);
+            color: var(--ink);
+            font: 600 11px var(--sans);
+            white-space: nowrap;
+            cursor: pointer;
+            box-shadow: 0 5px 16px rgba(32, 37, 31, 0.08);
+        }
+
+        .flip-button:hover { border-color: var(--red); }
+        .flip-button:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+        .flip-icon { color: var(--red); font-size: 17px; line-height: 1; }
+
+        .side-caption {
+            position: absolute;
+            right: -4px;
+            bottom: 37px;
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+        }
+
+        .registry {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            padding: 27px 0 32px;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            animation: fade-up 850ms 400ms both;
+        }
+
+        .registry-topline { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+        .registry-kicker { display: block; margin-bottom: 5px; color: var(--red); font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+        .registry-heading { margin: 0; font-family: var(--serif); font-size: 25px; font-weight: 500; }
+        .registry-count { display: flex; align-items: baseline; gap: 7px; color: var(--muted); font-size: 10px; }
+        .registry-count strong { color: var(--ink); font-family: var(--serif); font-size: 22px; font-weight: 500; }
+        .registry-tools { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+        .search-field { position: relative; display: flex; width: min(440px, 100%); align-items: center; gap: 10px; }
+        .search-icon { color: var(--red); font-size: 20px; line-height: 1; }
+        .search-field input { width: 100%; min-height: 42px; padding: 0 10px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--ink); font: 12px var(--sans); }
+        .search-field input::placeholder { color: var(--muted); opacity: 1; }
+        .search-field input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+        .registry-empty { margin: 0; color: var(--muted); font-size: 12px; }
+        .random-citizen-button, .archive-story-next, .archive-oracle-next {
+            display: inline-flex;
+            min-height: 40px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 13px;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            background: transparent;
+            color: var(--green);
+            font: 600 10px var(--sans);
+            cursor: pointer;
+            transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+        }
+        .random-citizen-button:hover, .archive-story-next:hover, .archive-oracle-next:hover { border-color: var(--green); background: rgba(36, 76, 61, 0.06); transform: translateY(-1px); }
+        .random-citizen-button:focus-visible, .archive-story-next:focus-visible, .archive-oracle-next:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+        .random-citizen-button span, .archive-story-next span, .archive-oracle-next span { color: var(--red); font-size: 15px; }
+        .citizen-buttons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+        .citizen-button {
+            min-height: 58px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 4px;
+            padding: 9px 13px;
+            border: 1px solid rgba(32, 37, 31, 0.24);
+            border-radius: 2px;
+            background: transparent;
+            color: var(--ink);
+            font: 600 11px var(--sans);
+            text-align: left;
+            cursor: pointer;
+            transition: background 180ms ease, color 180ms ease, border-color 180ms ease, transform 180ms ease;
+        }
+        .citizen-button:hover { border-color: var(--green); transform: translateY(-2px); }
+        .citizen-button[hidden] { display: none; }
+        .citizen-button[aria-pressed="true"] { border-color: var(--green); background: var(--green); color: #f2eee0; }
+        .citizen-button-name { font-size: 11px; line-height: 1.3; }
+        .citizen-button-role { color: var(--muted); font-size: 9px; font-weight: 500; }
+        .citizen-button[aria-pressed="true"] .citizen-button-role { color: #d4dfd1; }
+        .citizen-button:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+        .archive-lore {
+            display: grid;
+            grid-template-columns: 46px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 20px;
+            padding: 25px 0 29px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .archive-lore-seal { width: 42px; aspect-ratio: 1; display: grid; place-items: center; border: 1px solid var(--red); border-radius: 50%; color: var(--red); font-family: var(--serif); font-size: 21px; animation: seal-wiggle 5s ease-in-out infinite; }
+        .archive-lore-kicker { color: var(--red); font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+        .archive-lore-copy h2 { margin: 5px 0 0; font-family: var(--serif); font-size: 23px; font-weight: 500; }
+        .archive-story-text { max-width: 620px; min-height: 24px; margin: 7px 0 0; color: #5f625a; font-size: 12px; line-height: 1.65; }
+        .archive-lore-actions { display: grid; justify-items: end; gap: 10px; }
+        .archive-story-count { color: var(--muted); font-size: 9px; letter-spacing: 0.12em; }
+
+        .archive-oracle {
+            display: grid;
+            grid-template-columns: 46px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 20px;
+            padding: 25px 0 29px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .archive-oracle-seal { width: 42px; aspect-ratio: 1; display: grid; place-items: center; border: 1px solid var(--green); border-radius: 50%; color: var(--green); font-family: var(--serif); font-size: 21px; }
+        .archive-oracle-kicker { color: var(--green); font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+        .archive-oracle-copy h2 { margin: 5px 0 0; font-family: var(--serif); font-size: 23px; font-weight: 500; }
+        .archive-oracle-text { max-width: 620px; min-height: 24px; margin: 7px 0 0; color: #5f625a; font-size: 12px; line-height: 1.65; }
+        .archive-oracle-controls { display: grid; justify-items: end; gap: 10px; }
+        .archive-oracle-count { color: var(--muted); font-size: 9px; letter-spacing: 0.12em; }
+
+        .theme-shop { padding: 30px 0 32px; border-bottom: 1px solid var(--line); }
+        .theme-shop-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+        .theme-shop-kicker { color: var(--red); font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+        .theme-shop-title { margin: 5px 0 0; font-family: var(--serif); font-size: 25px; font-weight: 500; }
+        .theme-shop-description { margin: 6px 0 0; color: var(--muted); font-size: 11px; }
+        .theme-wallet { display: flex; align-items: center; gap: 12px; padding: 9px 11px; border: 1px solid var(--line); }
+        .wallet-seal { width: 30px; aspect-ratio: 1; display: grid; place-items: center; border: 1px solid var(--red); border-radius: 50%; color: var(--red); font-family: var(--serif); font-size: 15px; }
+        .wallet-label { display: block; color: var(--muted); font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .wallet-balance { display: block; margin-top: 2px; color: var(--ink); font-family: var(--serif); font-size: 17px; }
+        .daily-bonus { min-height: 34px; padding: 0 10px; border: 1px solid var(--green); border-radius: 2px; background: var(--green); color: #f2eee0; font: 600 9px var(--sans); cursor: pointer; }
+        .daily-bonus:hover { background: #1b3f32; }
+        .daily-bonus:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+        .daily-bonus:disabled { border-color: var(--line); background: transparent; color: var(--muted); cursor: default; }
+        .theme-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+        .theme-option { display: grid; grid-template-columns: 45px minmax(0, 1fr); align-items: center; gap: 10px; padding: 11px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.18); }
+        .theme-preview { position: relative; width: 45px; height: 58px; grid-row: span 2; overflow: hidden; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, 0.55); border-radius: 2px; color: rgba(255, 255, 255, 0.7); font-family: var(--serif); font-size: 20px; box-shadow: 0 3px 7px rgba(32, 37, 31, 0.12); }
+        .theme-preview::after { position: absolute; right: -7px; bottom: -16px; content: "Ш"; color: rgba(255, 255, 255, 0.12); font-family: var(--serif); font-size: 62px; }
+        .preview-garnet { background: radial-gradient(circle at 75% 23%, transparent 0 18%, rgba(241, 211, 143, 0.6) 18.5% 19%, transparent 19.5% 31%), linear-gradient(145deg, #7b2938, #481722); }
+        .preview-aurora { background: repeating-linear-gradient(132deg, rgba(189, 226, 205, 0.22) 0 1px, transparent 1px 7px), linear-gradient(145deg, #1e6658, #103b3b); }
+        .preview-saffron { background: repeating-conic-gradient(from 12deg at 75% 23%, rgba(241, 211, 143, 0.26) 0deg 3deg, transparent 3deg 22deg), linear-gradient(145deg, #9a602d, #522c21); }
+        .preview-tidal { background: radial-gradient(ellipse at 75% 110%, transparent 0 20%, rgba(183, 223, 235, 0.46) 21% 22%, transparent 23% 37%), linear-gradient(145deg, #285c78, #142f4b); }
+        .preview-custom { background: repeating-linear-gradient(145deg, rgba(217, 232, 200, 0.2) 0 1px, transparent 1px 7px), linear-gradient(145deg, #315247, #1b302c); }
+        .preview-graphite { background: repeating-linear-gradient(0deg, rgba(211, 216, 222, 0.14) 0 1px, transparent 1px 7px), repeating-linear-gradient(90deg, rgba(211, 216, 222, 0.14) 0 1px, transparent 1px 7px), linear-gradient(145deg, #4a4f55, #22262b); }
+        .preview-forest { background: repeating-linear-gradient(120deg, rgba(219, 232, 166, 0.18) 0 2px, transparent 2px 9px), linear-gradient(145deg, #4b6b2f, #243a22); }
+        .preview-sakura { background: radial-gradient(circle at 75% 25%, rgba(255, 217, 230, 0.5) 0 2px, transparent 3px), radial-gradient(circle at 40% 60%, rgba(255, 217, 230, 0.35) 0 2px, transparent 3px), linear-gradient(145deg, #c0587a, #6e2a4f); }
+        .preview-lavender { background: repeating-radial-gradient(circle at 78% 24%, rgba(228, 220, 255, 0.25) 0 2px, transparent 2px 9px), linear-gradient(145deg, #7a62b5, #3f3270); }
+        .preview-midnight { background: radial-gradient(circle at 20% 25%, #f4e6a8 0 1px, transparent 2px), radial-gradient(circle at 70% 40%, #f4e6a8 0 1.5px, transparent 2.5px), radial-gradient(circle at 45% 78%, #f4e6a8 0 1px, transparent 2px), linear-gradient(145deg, #1c2757, #0a0f2b); }
+        .preview-ember { background: radial-gradient(ellipse at 70% 115%, rgba(255, 170, 70, 0.7), transparent 55%), linear-gradient(145deg, #b8401d, #3e1008); }
+        .theme-option h3 { margin: 0; font-size: 10px; font-weight: 700; line-height: 1.35; }
+        .theme-option p { margin: 4px 0 0; color: var(--muted); font-size: 8px; line-height: 1.45; }
+        .theme-action { min-height: 32px; grid-column: 1 / -1; padding: 0 8px; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--ink); font: 600 9px var(--sans); cursor: pointer; }
+        .theme-action:hover { border-color: var(--green); }
+        .theme-action[aria-pressed="true"] { border-color: var(--green); background: var(--green); color: #f2eee0; }
+        .theme-action:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+        .theme-shop-status { min-height: 16px; margin: 12px 0 0; color: var(--muted); font-size: 10px; }
+        .custom-cover-editor { display: grid; grid-template-columns: minmax(100px, 0.8fr) 1.3fr 1fr auto; align-items: end; gap: 12px; margin-top: 22px; padding: 18px 0 2px; border-top: 1px solid var(--line); }
+        .custom-cover-editor[hidden] { display: none; }
+        .custom-cover-heading { grid-column: 1 / -1; }
+        .custom-cover-heading h3 { margin: 0; font-family: var(--serif); font-size: 18px; font-weight: 500; }
+        .custom-cover-heading p { margin: 5px 0 0; color: var(--muted); font-size: 10px; }
+        .custom-cover-preview { min-height: 42px; border: 1px solid var(--line); background: repeating-linear-gradient(145deg, rgba(217, 232, 200, 0.2) 0 1px, transparent 1px 8px), linear-gradient(128deg, #315247, #1b302c); }
+        .custom-cover-editor input[type="color"] { width: 100%; height: 42px; padding: 3px; border: 1px solid var(--line); background: transparent; }
+        .custom-cover-editor input[type="file"] { max-width: 100%; min-height: 42px; color: var(--muted); font: 10px var(--sans); }
+        .custom-cover-editor label { display: grid; gap: 6px; color: var(--muted); font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .custom-cover-button:disabled { opacity: 0.45; cursor: not-allowed; }
+        .custom-gallery { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); }
+        .custom-gallery-heading { margin: 0; font-family: var(--serif); font-size: 19px; font-weight: 500; }
+        .custom-gallery-note, .custom-gallery-empty { margin: 5px 0 12px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+        .custom-gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+        .custom-gallery-card { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); }
+        .custom-gallery-preview { width: 72px; height: 46px; border: 1px solid rgba(32, 37, 31, 0.18); background-color: #315247; background-position: center; background-size: cover; }
+        .custom-gallery-name { margin: 0; font-size: 10px; font-weight: 700; }
+        .custom-gallery-theme { margin: 4px 0 0; color: var(--muted); font-size: 8px; }
+        .custom-gallery-apply { grid-column: 1 / -1; min-height: 30px; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--green); font: 600 9px var(--sans); cursor: pointer; }
+        .custom-gallery-apply:hover { border-color: var(--green); background: rgba(36, 76, 61, 0.06); }
+        .custom-gallery-apply:disabled { color: var(--muted); cursor: default; }
+
+        footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 22px 0 27px;
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .photo-credit {
+            flex-basis: 100%;
+            font-size: 8px;
+            letter-spacing: 0;
+            line-height: 1.6;
+            text-transform: none;
+        }
+
+        .photo-credit a { color: var(--green); }
+
+        @keyframes fade-down { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes rise-in { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes passport-float { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(-3.5deg) translateY(-9px); } }
+        @keyframes seal-wiggle { 0%, 92%, 100% { transform: rotate(0); } 94% { transform: rotate(-9deg); } 97% { transform: rotate(7deg); } }
+
+        @media (max-width: 760px) {
+            .auth-screen { padding: 20px 7%; }
+            .auth-layout { grid-template-columns: 1fr; gap: 14px; }
+            .auth-intro { min-height: unset; gap: 18px; padding: 8px 0 0; }
+            .auth-copy h1 { margin: 10px 0; font-size: 42px; }
+            .auth-copy p { font-size: 12px; }
+            .auth-archive-mark { display: none; }
+            .auth-panel { padding: 18px 0 10px; border-top: 1px solid var(--line); border-left: 0; }
+            .top-session { gap: 8px; }
+            .session-name { max-width: 100px; }
+            .page-shell { padding: 0 7%; }
+            .topbar { min-height: 76px; }
+            .top-note { font-size: 9px; }
+            .auth-screen { padding: 20px 7%; }
+            .auth-layout { grid-template-columns: 1fr; gap: 14px; }
+            .auth-intro { min-height: unset; gap: 18px; padding: 8px 0 0; }
+            .auth-copy h1 { margin: 10px 0; font-size: 42px; }
+            .auth-copy p { font-size: 12px; }
+            .auth-archive-mark { display: none; }
+            .auth-panel { padding: 18px 0 10px; border-top: 1px solid var(--line); border-left: 0; }
+            .top-session { gap: 8px; }
+            .session-name { max-width: 100px; }
+            .view-tabs { width: 100%; }
+            .view-tab { flex: 1; }
+            .hero { grid-template-columns: 1fr; gap: 20px; padding: 58px 0 35px; }
+            h1 { font-size: clamp(54px, 13vw, 76px); }
+            .hero-description { font-size: 14px; }
+            .hero-meta { margin-top: 27px; }
+            .passport-stage { min-height: 390px; margin: 0 -3%; }
+            .passport-scene { width: min(420px, 92%); }
+            .side-caption { right: 0; }
+            .registry { row-gap: 14px; }
+            .registry-topline { align-items: flex-start; }
+            .registry-tools { align-items: flex-start; flex-direction: column; gap: 8px; }
+            .search-field { width: 100%; }
+            .citizen-buttons { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .random-citizen-button { align-self: flex-start; }
+            .archive-lore { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+            .archive-lore-seal { width: 36px; }
+            .archive-lore-actions { grid-column: 2; display: flex; align-items: center; justify-content: space-between; }
+            .archive-oracle { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+            .archive-oracle-seal { width: 36px; }
+            .archive-oracle-controls { grid-column: 2; display: flex; align-items: center; justify-content: space-between; }
+            .theme-shop-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+            .theme-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .theme-wallet { width: 100%; justify-content: space-between; }
+            .custom-gallery-grid { grid-template-columns: 1fr; }
+            .admin-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+            .admin-local-note { text-align: left; }
+            .admin-form { grid-template-columns: minmax(0, 1fr); }
+            .admin-balances { grid-template-columns: 1fr; gap: 0; }
+            .custom-cover-editor { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+            .custom-cover-preview { grid-column: 1 / -1; }
+            .custom-cover-button { grid-column: 1 / -1; }
+        }
+
+        @media (max-width: 420px) {
+            .auth-screen { padding: 16px 6%; }
+            .auth-copy h1 { font-size: 36px; }
+            .auth-panel { padding-top: 14px; }
+            .auth-tabs { margin-bottom: 18px; }
+            .auth-screen { padding: 16px 6%; }
+            .auth-copy h1 { font-size: 36px; }
+            .auth-panel { padding-top: 14px; }
+            .auth-tabs { margin-bottom: 18px; }
+            body::before { right: -12px; bottom: -60px; font-size: 150px; }
+            .brand-name { font-size: 11px; }
+            .brand-subtitle { font-size: 8px; }
+            .top-note { max-width: 102px; text-align: right; line-height: 1.5; }
+            .passport { padding: 14px 15px; }
+            .theme-sticker { top: 61px; right: 11px; width: 78px; min-height: 34px; padding: 5px; font-size: 6px; }
+            .passport-back-copy h2 { font-size: 18px; }
+            .passport-back-copy p { font-size: 9px; }
+            .flip-button { bottom: 0; min-height: 36px; }
+            .passport-content { gap: 8px; margin-top: 8px; }
+            .portrait-frame { width: 64px; height: 82px; }
+            .field-value { font-size: 11px; }
+            .field-value.small { font-size: 7px; }
+            .field-label { margin-top: 5px; font-size: 5px; }
+            .passport-bottom { margin-top: 7px; padding-top: 5px; }
+            .passport-stage { min-height: 320px; }
+            .stage-orbit { width: 84%; }
+            .side-caption { display: none; }
+            .citizen-buttons { gap: 5px; }
+            .citizen-button { min-height: 56px; padding: 8px 7px; }
+            .citizen-button-name { font-size: 9px; }
+            .citizen-button-role { font-size: 8px; }
+            footer { font-size: 8px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
+            .theme-option, .theme-wallet, .custom-cover-editor { background: #fff; box-shadow: 0 1px 2px rgba(32, 37, 31, 0.05), 0 8px 22px rgba(32, 37, 31, 0.05); }
+        .auth-field input, .auth-field select { background: #fff; }
+        .empire-panel { padding: 8px 0 56px; }
+        .empire-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0 0 24px; }
+        .stat-box { padding: 16px; border: 1px solid var(--line); border-radius: 4px; background: #fff; box-shadow: 0 1px 2px rgba(32, 37, 31, 0.05); }
+        .stat-box strong { display: block; font: 500 28px var(--serif); color: var(--green); }
+        .stat-box span { font-size: 11px; color: var(--muted); }
+        .empire-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+        .empire-card { padding: 20px; border: 1px solid var(--line); border-radius: 4px; background: #fff; box-shadow: 0 8px 22px rgba(32, 37, 31, 0.05); }
+        .empire-card h3 { margin: 0 0 14px; font: 500 22px var(--serif); }
+        .empire-card textarea, .empire-card input { width: 100%; margin: 0 0 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 2px; background: #fff; color: var(--ink); font: 13px var(--sans); }
+        .empire-btn { min-height: 38px; margin: 0 8px 8px 0; padding: 0 16px; border: 0; border-radius: 2px; background: var(--green); color: #fff; font: 600 11px var(--sans); cursor: pointer; }
+        .empire-btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+        .empire-btn:disabled { opacity: 0.4; cursor: default; }
+        .decree-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+        .decree-item { padding: 12px 14px; border-left: 3px solid var(--red); background: var(--paper); font-size: 13px; line-height: 1.5; }
+        .decree-item small { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; color: var(--muted); font-size: 10px; }
+        .decree-item button { border: 0; background: none; color: var(--red); font-size: 10px; cursor: pointer; }
+        .poll-q { margin: 0 0 12px; font: 500 17px var(--serif); }
+        .poll-opt { position: relative; display: block; width: 100%; margin: 0 0 8px; padding: 10px 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 2px; background: #fff; color: var(--ink); text-align: left; font: 13px var(--sans); cursor: pointer; }
+        .poll-opt i { position: absolute; inset: 0 auto 0 0; background: var(--green-light); z-index: 0; }
+        .poll-opt span { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 8px; }
+        .poll-opt.mine { border-color: var(--green); font-weight: 600; }
+        .empire-status, .empty-note { color: var(--muted); font-size: 12px; }
+        @media (max-width: 760px) { .empire-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .empire-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <section class="auth-screen" id="auth-screen" aria-labelledby="auth-title">
+        <div class="auth-layout">
+            <div class="auth-intro">
+                <a class="auth-brand" href="#" aria-label="Шнимце-Кукинская империя">
+                    <span class="auth-brand-seal" aria-hidden="true">Ш</span>
+                    <span><span class="auth-brand-title">АРХИВ ИМПЕРИИ</span><span class="auth-brand-subtitle">Шнимце-Кукинская империя</span></span>
+                </a>
+                <div class="auth-copy">
+                    <span class="auth-kicker">Цифровой архив граждан</span>
+                    <h1 id="auth-title">Твоя история<br><span>начинается здесь</span></h1>
+                    <p>Войди, чтобы увидеть свою карточку и познакомиться с открытым архивом граждан.</p>
+                </div>
+                <div class="auth-archive-mark">ШКИ · Архивная система</div>
+            </div>
+            <section class="auth-panel" aria-label="Вход и регистрация">
+                <div class="auth-tabs" role="tablist" aria-label="Вход или регистрация">
+                    <button class="auth-tab" id="register-tab" type="button" role="tab" aria-selected="true" aria-controls="register-form">Регистрация</button>
+                </div>
+                <form class="auth-form" id="register-form" autocomplete="on" novalidate>
+                    <label class="auth-field">Имя
+                        <input name="firstName" type="text" minlength="2" maxlength="24" autocomplete="given-name" required>
+                    </label>
+                    <label class="auth-field">Фамилия
+                        <input name="lastName" type="text" minlength="2" maxlength="24" autocomplete="family-name" required>
+                    </label>
+                    <label class="auth-field">Должность
+                        <select name="jobRole">
+                            <option value="Гражданин">Гражданин</option>
+                            <option value="Министр">Министр</option>
+                            <option value="Вице-президент">Вице-президент</option>
+                            <option value="Президент">Президент</option>
+                            <option value="Премьер-министр">Премьер-министр</option>
+                            <option value="Помощник президента">Помощник президента</option>
+                            <option value="Врач">Врач</option>
+                            <option value="Полицейский">Полицейский</option>
+                            <option value="Учитель">Учитель</option>
+                            <option value="Судья">Судья</option>
+                            <option value="Военный">Военный</option>
+                            <option value="Журналист">Журналист</option>
+                            <option value="Учёный">Учёный</option>
+                        </select>
+                    </label>
+                    <label class="auth-field">Дата рождения
+                        <input name="birthDate" type="date" autocomplete="bday" required>
+                    </label>
+                    <label class="auth-field">Фото для карточки · по желанию
+                        <input name="portrait" type="file" accept="image/*">
+                    </label>
+                    <button class="auth-submit" type="button">Создать аккаунт</button>
+                </form>
+                <p class="auth-message" id="auth-message" role="status" aria-live="polite"></p>
+                <p class="auth-footnote">Карточки общие: все, кто открыл эту страницу под своим аккаунтом, видят друг друга в реестре.</p>
+            </section>
+        </div>
+    </section>
+    <div class="page-shell" id="app-shell" hidden>
+        <header class="topbar">
+            <a class="brand" href="#" aria-label="Архив Шнимце-Кукинской империи">
+                <span class="brand-seal" aria-hidden="true">Ш</span>
+                <span>
+                    <span class="brand-name">АРХИВ ИМПЕРИИ</span>
+                    <span class="brand-subtitle">Шнимце-Кукинская империя</span>
+                </span>
+            </a>
+            <div class="top-session" id="top-session" hidden>
+                <div class="top-note"><span class="status-dot" aria-hidden="true"></span>Цифровой реестр · 2048</div>
+                <span class="session-name" id="session-name"></span>
+                <button class="logout-button" id="logout-button" type="button">Выйти</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="view-tabs" id="view-tab-list" role="tablist" aria-label="Разделы архива">
+                <button class="view-tab" id="archive-tab" type="button" role="tab" aria-selected="true" aria-controls="archive-panel" tabindex="0">Архив <span class="view-tab-count">00 записей</span></button>
+                <button class="view-tab" id="shop-tab" type="button" role="tab" aria-selected="false" aria-controls="shop-panel" tabindex="-1">Магазин <span class="view-tab-count" id="shop-tab-balance">160 жт.</span></button>
+                <button class="view-tab" id="empire-tab" type="button" role="tab" aria-selected="false" aria-controls="empire-panel" tabindex="-1">Империя</button>
+                <button class="view-tab" id="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="admin-panel" tabindex="-1" hidden>Админка</button>
+            </div>
+            <div class="view-panel" id="archive-panel" role="tabpanel" aria-labelledby="archive-tab" tabindex="0">
+            <section class="hero" aria-labelledby="hero-title">
+                <div class="hero-copy">
+                    <p class="eyebrow">Служба гражданской идентичности</p>
+                    <h1 id="hero-title">Граждане<br><span>Империи</span></h1>
+                    <p class="hero-description">Персональные архивные ID-карты граждан Шнимце-Кукинской империи.</p>
+                </div>
+
+                <div class="passport-stage" aria-label="Архивный макет ID-карты гражданина империи">
+                    <div class="stage-orbit" aria-hidden="true"></div>
+                    <div class="passport-scene theme-garnet" id="passport-scene">
+                        <div class="passport-rotator" id="passport-rotator">
+                            <article class="passport passport-front" aria-label="Лицевая сторона архивной ID-карты" aria-hidden="false">
+                                <div class="passport-top">
+                                    <div>
+                                        <div class="passport-country">Шнимце-Кукинская империя</div>
+                                        <div class="passport-kind">Архивная ID-карта</div>
+                                    </div>
+                                    <span class="passport-emblem" aria-hidden="true">Ш</span>
+                                </div>
+                                <span class="theme-sticker" id="theme-sticker" aria-hidden="true">ПАНИКИ НЕТ</span>
+                                <div class="passport-content">
+                                    <div class="portrait-frame"><img class="portrait" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt=""></div>
+                                    <div class="passport-fields">
+                                        <div class="field-label">Фамилия / Surname</div>
+                                        <div class="field-value surname">—</div>
+                                        <div class="field-label">Имя / Given names</div>
+                                        <div class="name-role-row">
+                                            <div class="field-value given-name">—</div>
+                                            <span class="role-badge" aria-live="polite">—</span>
+                                        </div>
+                                        <div class="field-label">Дата рождения / Date of birth</div>
+                                        <div class="field-value birth-date">—</div>
+                                        <div class="field-label">Гражданство / Nationality</div>
+                                        <div class="field-value small">ШКИ · SKI</div>
+                                    </div>
+                                </div>
+                                <div class="passport-bottom">
+                                    <span class="passport-number">№ SKI ———</span>
+                                    <span class="passport-warning">ОБРАЗЕЦ · НЕ ДОКУМЕНТ</span>
+                                </div>
+                            </article>
+                            <article class="passport passport-back" aria-label="Задняя сторона макета" aria-hidden="true" inert>
+                                <div class="passport-back-content">
+                                    <div class="passport-back-header">
+                                        <span class="passport-back-seal" aria-hidden="true">Ш</span>
+                                        <span class="passport-back-heading">Шнимце-Кукинская империя</span>
+                                    </div>
+                                    <div class="passport-back-copy">
+                                        <div class="passport-back-heading">Архив граждан · оборотная сторона</div>
+                                        <h2>История гражданина</h2>
+                                        <p>Памятная страница электронного архива Шнимце-Кукинской империи.</p>
+                                    </div>
+                                    <div class="archive-code-panel">
+                                        <span class="archive-code-label">Декоративный код архива · не для считывания</span>
+                                        <code class="archive-code" aria-live="polite">SKI-ARC-————</code>
+                                    </div>
+                                    <div class="passport-back-footer">
+                                        <span>УЧЕБНЫЙ МАКЕТ</span>
+                                        <span class="passport-warning">НЕ ЯВЛЯЕТСЯ ДОКУМЕНТОМ</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <button class="flip-button" id="passport-side-toggle" type="button" aria-controls="passport-rotator" aria-pressed="false">
+                        <span class="flip-icon" aria-hidden="true">↻</span>
+                        <span class="flip-label">Показать оборот</span>
+                    </button>
+                    <span class="side-caption">Образец документа · SKI</span>
+                </div>
+            </section>
+
+            <section class="registry" aria-label="Реестр граждан">
+                <div class="registry-topline">
+                    <div>
+                        <span class="registry-kicker">Архив · ШКИ</span>
+                        <h2 class="registry-heading">Граждане</h2>
+                    </div>
+                    <div class="registry-count" role="status" aria-live="polite"><strong id="registry-count">00</strong><span>записи</span></div>
+                </div>
+                <div class="registry-tools">
+                    <label class="search-field">
+                        <span class="search-icon" aria-hidden="true">⌕</span>
+                        <input id="citizen-search" type="search" placeholder="Имя или должность" aria-label="Поиск по имени или должности" autocomplete="off">
+                    </label>
+                    <button class="random-citizen-button" id="random-citizen" type="button"><span aria-hidden="true">⤨</span>Случайный гражданин</button>
+                    <p class="registry-empty" id="registry-empty" hidden>Совпадений не найдено.</p>
+                </div>
+                <div class="citizen-buttons" role="group" aria-label="Архивные ID-карты граждан">
+                </div>
+            </section>
+            <section class="archive-lore" aria-labelledby="archive-lore-title">
+                <span class="archive-lore-seal" aria-hidden="true">К</span>
+                <div class="archive-lore-copy">
+                    <span class="archive-lore-kicker">Приколы · неофициально</span>
+                    <h2 id="archive-lore-title">Приколы</h2>
+                    <p class="archive-story-text" id="archive-story" aria-live="polite">По имперскому указу каждая корелла может занять самое солнечное место во дворце.</p>
+                </div>
+                <div class="archive-lore-actions">
+                    <span class="archive-story-count" id="archive-story-count">01 / 05</span>
+                    <button class="archive-story-next" id="archive-story-next" type="button">Ещё прикол <span aria-hidden="true">↻</span></button>
+                </div>
+            </section>
+            <section class="archive-oracle" aria-labelledby="archive-oracle-title">
+                <span class="archive-oracle-seal" aria-hidden="true">✳</span>
+                <div class="archive-oracle-copy">
+                    <span class="archive-oracle-kicker">Отдел прогнозов · несерьёзно</span>
+                    <h2 id="archive-oracle-title">Предсказание Кореллы</h2>
+                    <p class="archive-oracle-text" id="archive-oracle-text" aria-live="polite">Сегодня корелла советует не спорить с кормушкой.</p>
+                </div>
+                <div class="archive-oracle-controls">
+                    <span class="archive-oracle-count" id="archive-oracle-count">01 / 05</span>
+                    <button class="archive-oracle-next" id="archive-oracle-next" type="button">Ещё прогноз <span aria-hidden="true">↻</span></button>
+                </div>
+            </section>
+            </div>
+            <section class="theme-shop view-panel" id="shop-panel" role="tabpanel" aria-labelledby="shop-tab" tabindex="0" hidden>
+                <div class="theme-shop-heading">
+                    <div>
+                        <span class="theme-shop-kicker">Мастерская · игровые жетоны</span>
+                        <h2 class="theme-shop-title" id="theme-shop-title">Оформления карточек</h2>
+                        <p class="theme-shop-description">Премиальные оформления и бонус каждые 4 часа.</p>
+                    </div>
+                    <div class="theme-wallet" aria-label="Баланс игровых жетонов">
+                        <span class="wallet-seal" aria-hidden="true">Ж</span>
+                        <span>
+                            <span class="wallet-label">Имперские жетоны</span>
+                            <strong class="wallet-balance"><span id="theme-balance">600</span> жт.</strong>
+                        </span>
+                        <button class="daily-bonus" id="daily-bonus" type="button">Забрать +350</button>
+                    </div>
+                </div>
+                <div class="theme-grid">
+                    <article class="theme-option">
+                        <span class="theme-preview preview-garnet" aria-hidden="true">Ш</span>
+                        <div><h3>Имперский гранат</h3><p>Я спокойна. Почти.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="garnet" aria-pressed="true">Используется</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-aurora" aria-hidden="true">Ш</span>
+                        <div><h3>Северное сияние</h3><p>Северный вайб на максимуме.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="aurora" aria-pressed="false">Открыть · 1 500 жт.</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-saffron" aria-hidden="true">Ш</span>
+                        <div><h3>Медовый полдень</h3><p>Семечки важнее дедлайна.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="saffron" aria-pressed="false">Открыть · 2 600 жт.</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-tidal" aria-hidden="true">Ш</span>
+                        <div><h3>Лазурная бухта</h3><p>Извините, я на созвоне.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="tidal" aria-pressed="false">Открыть · 3 900 жт.</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-graphite" aria-hidden="true">Ш</span>
+                        <div><h3>Графитовая строгость</h3><p>Деловой вид, дедлайны под контролем.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="graphite" aria-pressed="false">Открыть · 700 жт.</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-forest" aria-hidden="true">Ш</span>
+                        <div><h3>Лесной мох</h3><p>Тишина, шишки и свежий воздух.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="forest" aria-pressed="false">Открыть · 1 000 жт.</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-sakura" aria-hidden="true">Ш</span>
+                        <div><h3>Сакура</h3><p>Весеннее настроение круглый год.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="sakura" aria-pressed="false">Открыть · 1 800 жт.</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-lavender" aria-hidden="true">Ш</span>
+                        <div><h3>Лавандовый дым</h3><p>Спокойствие и чай с мёдом.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="lavender" aria-pressed="false">Открыть · 2 200 жт.</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-midnight" aria-hidden="true">Ш</span>
+                        <div><h3>Полночный сапфир</h3><p>Звёзды видят, как ты работаешь.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="midnight" aria-pressed="false">Открыть · 3 200 жт.</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-ember" aria-hidden="true">Ш</span>
+                        <div><h3>Лавовый поток</h3><p>Горячо, красиво, немного опасно.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="ember" aria-pressed="false">Открыть · 4 200 жт.</button>
+                    </article>
+                    <article class="theme-option">
+                        <span class="theme-preview preview-custom" aria-hidden="true">✦</span>
+                        <div><h3>Своя обложка</h3><p>Загрузи своё фото и выбери цвет.</p></div>
+                        <button class="theme-action" type="button" data-theme-id="custom" aria-pressed="false">Открыть · 5 000 жт.</button>
+                    </article>
+                </div>
+                <div class="custom-cover-editor" id="custom-cover-editor" hidden>
+                    <div class="custom-cover-heading">
+                        <h3>Мастерская своей обложки</h3>
+                        <p>Загрузи фото, выбери цвет и примени свой дизайн. Это локальный макет.</p>
+                    </div>
+                    <div class="custom-cover-preview" id="custom-cover-preview" aria-label="Предпросмотр собственной обложки"></div>
+                    <label>Цвет фона<input id="custom-cover-color" type="color" value="#315247"></label>
+                    <label>Фото на обложку<input id="custom-cover-file" type="file" accept="image/*"></label>
+                    <button class="custom-cover-button" id="apply-custom-cover" type="button">Применить обложку</button>
+                    <p class="custom-cover-status" id="custom-cover-status" role="status" aria-live="polite">Купи тему «Своя обложка» за 5 000 жетонов, чтобы открыть редактор.</p>
+                </div>
+                <section class="custom-gallery" aria-labelledby="custom-gallery-heading">
+                    <h3 class="custom-gallery-heading" id="custom-gallery-heading">Дизайны граждан</h3>
+                    <p class="custom-gallery-note">Общая галерея этого браузера: чужой фон можно посмотреть и примерить, но он не меняет другие карточки сам.</p>
+                    <p class="custom-gallery-empty" id="custom-gallery-empty">Пока нет опубликованных обложек. Создай первую в мастерской выше.</p>
+                    <div class="custom-gallery-grid" id="custom-gallery-grid"></div>
+                </section>
+                <p class="theme-shop-status" id="theme-shop-status" role="status" aria-live="polite">Только игровые жетоны, никаких денежных платежей.</p>
+            </section>
+            <section class="empire-panel view-panel" id="empire-panel" role="tabpanel" aria-labelledby="empire-tab" tabindex="0" hidden>
+                <div class="empire-stats" id="empire-stats"></div>
+                <div class="empire-grid">
+                    <div class="empire-card">
+                        <h3>Указы империи</h3>
+                        <div id="decree-compose" hidden>
+                            <textarea id="decree-text" maxlength="280" rows="3" placeholder="Текст указа (до 280 знаков)"></textarea>
+                            <button class="empire-btn" id="decree-send" type="button">Издать указ</button>
+                        </div>
+                        <ul class="decree-list" id="decree-list"></ul>
+                    </div>
+                    <div class="empire-card">
+                        <h3>Голосование</h3>
+                        <div id="poll-box"></div>
+                        <div id="poll-admin" hidden>
+                            <input id="poll-q" maxlength="90" placeholder="Вопрос">
+                            <input id="poll-a1" maxlength="40" placeholder="Вариант 1">
+                            <input id="poll-a2" maxlength="40" placeholder="Вариант 2">
+                            <input id="poll-a3" maxlength="40" placeholder="Вариант 3 (необязательно)">
+                            <button class="empire-btn" id="poll-create" type="button">Начать голосование</button>
+                            <button class="empire-btn ghost" id="poll-close" type="button">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="empire-status" id="empire-status" role="status" aria-live="polite"></p>
+            </section>
+            <section class="admin-panel view-panel" id="admin-panel" role="tabpanel" aria-labelledby="admin-tab" tabindex="0" hidden>
+                <div class="admin-heading">
+                    <div>
+                        <span class="admin-kicker">Локальное управление</span>
+                        <h2 class="admin-title">Казначейство империи</h2>
+                    </div>
+                    <p class="admin-local-note">Демо-админка: изменения сохраняются только в этом браузере и не управляют сервером.</p>
+                </div>
+                <div class="admin-form">
+                    <label class="admin-field">Кому начислить жетоны
+                        <select id="admin-citizen">
+                        </select>
+                    </label>
+                    <label class="admin-field">Сумма
+                        <input id="admin-amount" type="number" min="1" max="1000000" step="100" value="500" inputmode="numeric">
+                    </label>
+                    <button class="admin-credit-button" id="admin-credit" type="button">Начислить жетоны</button>
+                </div>
+                <p class="admin-status" id="admin-status" role="status" aria-live="polite">Выбери гражданина и укажи сумму.</p>
+                <ul class="admin-balances" aria-label="Баланс граждан">
+                </ul>
+                <h3 class="admin-subtitle">Кадры империи</h3>
+                <p class="admin-status" id="admin-staff-status" role="status" aria-live="polite">Назначай должности и исключай зарегистрированных граждан. Должности «Президент», «Вице-президент» и «Министр» бывают только в одном экземпляре, граждан может быть сколько угодно. Чтобы назначить занятую должность, сначала сделай её владельца гражданином.</p>
+                <ul class="admin-staff" id="admin-staff" aria-label="Зарегистрированные граждане"></ul>
+            </section>
+        </main>
+
+        <footer>
+            <span>Шнимце-Кукинская империя · 2028</span>
+            <span>Архив гражданской идентичности</span>
+        </footer>
+    </div>
+    <script>
+        const citizenButtons = [...document.querySelectorAll(".citizen-button")];
+        const givenName = document.querySelector(".given-name");
+        const roleBadge = document.querySelector(".role-badge");
+        const surname = document.querySelector(".surname");
+        const birthDate = document.querySelector(".birth-date");
+        const passportNumber = document.querySelector(".passport-number");
+        const portrait = document.querySelector(".portrait");
+        const archiveCode = document.querySelector(".archive-code");
+        const passportScene = document.querySelector("#passport-scene");
+        const sideToggle = document.querySelector("#passport-side-toggle");
+        const sideLabel = sideToggle.querySelector(".flip-label");
+        const passportFront = document.querySelector(".passport-front");
+        const passportBack = document.querySelector(".passport-back");
+        const citizenSearch = document.querySelector("#citizen-search");
+        const registryCount = document.querySelector("#registry-count");
+        const registryEmpty = document.querySelector("#registry-empty");
+        const randomCitizenButton = document.querySelector("#random-citizen");
+        const archiveStory = document.querySelector("#archive-story");
+        const archiveStoryCount = document.querySelector("#archive-story-count");
+        const archiveStoryNext = document.querySelector("#archive-story-next");
+        const archiveOracleText = document.querySelector("#archive-oracle-text");
+        const archiveOracleCount = document.querySelector("#archive-oracle-count");
+        const archiveOracleNext = document.querySelector("#archive-oracle-next");
+        const themeActionButtons = document.querySelectorAll(".theme-action");
+        const themeBalance = document.querySelector("#theme-balance");
+        const themeSticker = document.querySelector("#theme-sticker");
+        const shopTabBalance = document.querySelector("#shop-tab-balance");
+        const dailyBonusButton = document.querySelector("#daily-bonus");
+        const themeShopStatus = document.querySelector("#theme-shop-status");
+        const adminCitizenSelect = document.querySelector("#admin-citizen");
+        const adminAmountInput = document.querySelector("#admin-amount");
+        const adminCreditButton = document.querySelector("#admin-credit");
+        const adminStatus = document.querySelector("#admin-status");
+        const adminBalanceLabels = document.querySelectorAll("[data-admin-balance]");
+        const customCoverEditor = document.querySelector("#custom-cover-editor");
+        const customCoverColorInput = document.querySelector("#custom-cover-color");
+        const customCoverFileInput = document.querySelector("#custom-cover-file");
+        const customCoverPreview = document.querySelector("#custom-cover-preview");
+        const customCoverButton = document.querySelector("#apply-custom-cover");
+        const customCoverStatus = document.querySelector("#custom-cover-status");
+        const customGalleryGrid = document.querySelector("#custom-gallery-grid");
+        const customGalleryEmpty = document.querySelector("#custom-gallery-empty");
+        const viewTabList = document.querySelector("#view-tab-list");
+        const viewTabs = [...viewTabList.querySelectorAll('[role="tab"]')];
+        const viewPanels = viewTabs.map((tab) => document.querySelector(`#${tab.getAttribute("aria-controls")}`));
+        const shopStorageKey = "shki-archive-shop-v2";
+        const bonusCooldownMs = 4 * 60 * 60 * 1000;
+        const bonusAmount = 350;
+        const passportThemes = [
+            { id: "garnet", name: "Имперский гранат", price: 0, className: "theme-garnet", sticker: "ПАНИКИ НЕТ" },
+            { id: "aurora", name: "Северное сияние", price: 1500, className: "theme-aurora", sticker: "ВАЙБ: 100%" },
+            { id: "saffron", name: "Медовый полдень", price: 2600, className: "theme-saffron", sticker: "СЕМЕЧКИ > ДЕЛА" },
+            { id: "tidal", name: "Лазурная бухта", price: 3900, className: "theme-tidal", sticker: "НА СОЗВОНЕ" },
+            { id: "graphite", name: "Графитовая строгость", price: 700, className: "theme-graphite", sticker: "СЕРЬЁЗНЫЙ ВИД" },
+            { id: "forest", name: "Лесной мох", price: 1000, className: "theme-forest", sticker: "ПОЛЯНКА ЗАНЯТА" },
+            { id: "sakura", name: "Сакура", price: 1800, className: "theme-sakura", sticker: "ЦВЕТУ КАК МОГУ" },
+            { id: "lavender", name: "Лавандовый дым", price: 2200, className: "theme-lavender", sticker: "Я МЕДИТИРУЮ" },
+            { id: "midnight", name: "Полночный сапфир", price: 3200, className: "theme-midnight", sticker: "НОЧНАЯ СМЕНА" },
+            { id: "ember", name: "Лавовый поток", price: 4200, className: "theme-ember", sticker: "ГОРЮ НА РАБОТЕ" },
+            { id: "custom", name: "Своя обложка", price: 5000, className: "theme-custom", sticker: "ЭТО МОЯ КАРТА" }
+        ];
+        const validThemeIds = new Set(passportThemes.map((theme) => theme.id));
+        const savedShopState = (() => {
+            try {
+                return JSON.parse(localStorage.getItem(shopStorageKey) || "null");
+            } catch {
+                return null;
+            }
+        })();
+        const citizenIds = new Set([...citizenButtons].map((button) => button.dataset.citizenId));
+        const savedBalances = savedShopState?.citizenBalances && typeof savedShopState.citizenBalances === "object" ? savedShopState.citizenBalances : {};
+        const legacyBalance = Number.isInteger(savedShopState?.tokenBalance) ? Math.max(0, savedShopState.tokenBalance) : 600;
+        const citizenBalances = Object.fromEntries([...citizenButtons].map((button) => {
+            const citizenId = button.dataset.citizenId;
+            const savedBalance = savedBalances[citizenId];
+            const balance = Number.isInteger(savedBalance) ? Math.max(0, savedBalance) : citizenId === "farhad" ? legacyBalance : 600;
+            return [citizenId, balance];
+        }));
+        let selectedCitizenId = citizenIds.has(savedShopState?.selectedCitizenId) ? savedShopState.selectedCitizenId : (citizenButtons[0]?.dataset.citizenId ?? "");
+        let tokenBalance = citizenBalances[selectedCitizenId] ?? 0;
+        let unlockedThemeIds = Array.isArray(savedShopState?.unlockedThemeIds)
+            ? [...new Set(["garnet", ...savedShopState.unlockedThemeIds.filter((id) => validThemeIds.has(id))])]
+            : ["garnet"];
+        const savedCitizenThemes = savedShopState?.citizenThemeIds && typeof savedShopState.citizenThemeIds === "object" ? savedShopState.citizenThemeIds : {};
+        const citizenThemeIds = Object.fromEntries([...citizenButtons].map((button) => {
+            const citizenId = button.dataset.citizenId;
+            const savedThemeId = savedCitizenThemes[citizenId];
+            const legacyThemeId = citizenId === selectedCitizenId ? savedShopState?.activeThemeId : "garnet";
+            const themeId = unlockedThemeIds.includes(savedThemeId) ? savedThemeId : unlockedThemeIds.includes(legacyThemeId) ? legacyThemeId : "garnet";
+            return [citizenId, themeId];
+        }));
+        let activeThemeId = citizenThemeIds[selectedCitizenId] || "garnet";
+        let bonusClaimedAt = typeof savedShopState?.bonusClaimedAt === "number" ? Math.max(0, savedShopState.bonusClaimedAt) : 0;
+        const savedCustomDesigns = savedShopState?.customDesignsByCitizen && typeof savedShopState.customDesignsByCitizen === "object" ? savedShopState.customDesignsByCitizen : {};
+        const defaultCustomColor = "#315247";
+        const customDesignsByCitizen = Object.fromEntries([...citizenButtons].map((button) => {
+            const citizenId = button.dataset.citizenId;
+            const savedDesign = savedCustomDesigns[citizenId] || {};
+            const color = typeof savedDesign.color === "string" && /^#[0-9a-f]{6}$/i.test(savedDesign.color) ? savedDesign.color : defaultCustomColor;
+            const image = typeof savedDesign.image === "string" && savedDesign.image.startsWith("data:image/") && savedDesign.image.length <= 750_000 ? savedDesign.image : "";
+            return [citizenId, { color, image }];
+        }));
+        const legacyCustomDesign = savedShopState?.customCoverColor || savedShopState?.customCoverImage;
+        if (legacyCustomDesign && !savedCustomDesigns[selectedCitizenId]) {
+            customDesignsByCitizen[selectedCitizenId] = {
+                color: typeof savedShopState.customCoverColor === "string" && /^#[0-9a-f]{6}$/i.test(savedShopState.customCoverColor) ? savedShopState.customCoverColor : defaultCustomColor,
+                image: typeof savedShopState.customCoverImage === "string" && savedShopState.customCoverImage.startsWith("data:image/") && savedShopState.customCoverImage.length <= 750_000 ? savedShopState.customCoverImage : ""
+            };
+        }
+        let customCoverColor = customDesignsByCitizen[selectedCitizenId]?.color ?? defaultCustomColor;
+        let customCoverImage = customDesignsByCitizen[selectedCitizenId]?.image ?? "";
+        let pendingCustomCoverImage = null;
+        const archiveStories = [
+            "По имперскому указу каждая корелла может занять самое солнечное место во дворце.",
+            "Салех однажды внёс в бюджет мешок семечек. Ревизоры ищут его по сей день.",
+            "Захид провёл заседание министерства с одиннадцатью кореллами. Все проголосовали за полдник.",
+            "Фархад открыл северное окно и назначил сквозняк советником по свежему воздуху.",
+            "Имперская печать однажды укатилась за крошкой и вернулась с дипломатическим протоколом."
+        ];
+        let currentStoryIndex = 0;
+        const oraclePredictions = [
+            "Сегодня корелла советует не спорить с кормушкой.",
+            "Удача найдёт тебя там, где лежит последняя семечка.",
+            "Если услышишь три клювка, пора объявить перерыв.",
+            "Важные решения лучше принимать после полдника.",
+            "Твой цвет удачи сегодня — тот, на котором не видно следов от семечек."
+        ];
+        let currentOracleIndex = 0;
+
+        const showArchiveStory = (index) => {
+            currentStoryIndex = index;
+            archiveStory.textContent = archiveStories[index];
+            archiveStoryCount.textContent = `${String(index + 1).padStart(2, "0")} / ${String(archiveStories.length).padStart(2, "0")}`;
+        };
+
+        const saveShopState = () => {
+            try {
+                localStorage.setItem(shopStorageKey, JSON.stringify({ tokenBalance, citizenBalances, selectedCitizenId, unlockedThemeIds, activeThemeId, citizenThemeIds, bonusClaimedAt, customDesignsByCitizen }));
+            } catch {
+                themeShopStatus.textContent = "Браузер не разрешил сохранить коллекцию.";
+            }
+        };
+
+        const applyActiveTheme = () => {
+            const theme = passportThemes.find((item) => item.id === activeThemeId) || passportThemes[0];
+            passportScene.classList.remove(...passportThemes.map((item) => item.className));
+            passportScene.classList.add(theme.className);
+            passportScene.dataset.themeId = theme.id;
+            passportScene.style.setProperty("--custom-cover-color", customCoverColor);
+            passportScene.style.setProperty("--custom-cover-rgb", customCoverColor.slice(1).match(/.{2}/g).map((part) => parseInt(part, 16)).join(", "));
+            passportScene.style.setProperty("--custom-cover-image", customCoverImage ? `url("${customCoverImage}")` : "none");
+            themeSticker.textContent = theme.sticker;
+        };
+
+        const updateCustomCoverPreview = () => {
+            const image = pendingCustomCoverImage || customCoverImage;
+            customCoverPreview.style.backgroundColor = customCoverColorInput.value;
+            customCoverPreview.style.backgroundImage = image
+                ? `linear-gradient(128deg, ${customCoverColorInput.value}66, ${customCoverColorInput.value}aa), url("${image}")`
+                : `repeating-linear-gradient(145deg, rgba(217, 232, 200, 0.2) 0 1px, transparent 1px 8px), linear-gradient(128deg, ${customCoverColorInput.value}, #1b302c)`;
+            customCoverPreview.style.backgroundPosition = "center";
+            customCoverPreview.style.backgroundSize = "cover";
+        };
+
+        const renderAdminBalances = () => {
+            document.querySelectorAll("[data-admin-balance]").forEach((label) => {
+                label.textContent = citizenBalances[label.dataset.adminBalance].toLocaleString("ru-RU");
+            });
+        };
+
+        const renderCustomGallery = () => {
+            customGalleryGrid.replaceChildren();
+            const publishedDesigns = [...citizenButtons]
+                .map((button) => ({ button, design: customDesignsByCitizen[button.dataset.citizenId] }))
+                .filter(({ design }) => design && (design.image || design.color !== defaultCustomColor));
+
+            customGalleryEmpty.hidden = publishedDesigns.length > 0;
+
+            publishedDesigns.forEach(({ button, design }) => {
+                const card = document.createElement("article");
+                card.className = "custom-gallery-card";
+                const preview = document.createElement("div");
+                preview.className = "custom-gallery-preview";
+                preview.style.backgroundColor = design.color;
+                preview.style.backgroundImage = design.image
+                    ? `linear-gradient(128deg, rgba(14, 22, 20, 0.2), rgba(14, 22, 20, 0.66)), url("${design.image}")`
+                    : `repeating-linear-gradient(145deg, rgba(217, 232, 200, 0.2) 0 1px, transparent 1px 8px), linear-gradient(128deg, ${design.color}, #1b302c)`;
+                const details = document.createElement("div");
+                const owner = document.createElement("h3");
+                owner.className = "custom-gallery-name";
+                owner.textContent = `${button.dataset.firstName} ${button.dataset.surname}`;
+                const style = document.createElement("p");
+                style.className = "custom-gallery-theme";
+                style.textContent = "Своя обложка · сохранена";
+                const applyButton = document.createElement("button");
+                applyButton.className = "custom-gallery-apply";
+                applyButton.type = "button";
+                applyButton.disabled = !unlockedThemeIds.includes("custom") || button.dataset.citizenId === selectedCitizenId;
+                applyButton.textContent = !unlockedThemeIds.includes("custom") ? "Открыть тему за 5 000" : applyButton.disabled ? "Текущий дизайн" : "Примерить на свою карточку";
+                applyButton.addEventListener("click", () => {
+                    if (!unlockedThemeIds.includes("custom") || button.dataset.citizenId === selectedCitizenId) return;
+                    customCoverColor = design.color;
+                    customCoverImage = design.image;
+                    pendingCustomCoverImage = null;
+                    customCoverFileInput.value = "";
+                    customCoverColorInput.value = design.color;
+                    customDesignsByCitizen[selectedCitizenId] = { ...design };
+                    activeThemeId = "custom";
+                    citizenThemeIds[selectedCitizenId] = "custom";
+                    applyActiveTheme();
+                    renderThemeShop();
+                    renderCustomGallery();
+                    customCoverStatus.textContent = `Дизайн ${button.dataset.firstName} скопирован только на текущую карточку.`;
+                    saveShopState();
+                });
+                details.append(owner, style);
+                card.append(preview, details, applyButton);
+                customGalleryGrid.append(card);
+            });
+        };
+
+        const renderThemeShop = () => {
+            const formatTokens = (amount) => amount.toLocaleString("ru-RU");
+            themeBalance.textContent = formatTokens(tokenBalance);
+            shopTabBalance.textContent = `${formatTokens(tokenBalance)} жт.`;
+            updateBonusButton();
+            customCoverEditor.hidden = !unlockedThemeIds.includes("custom");
+            customCoverButton.disabled = !unlockedThemeIds.includes("custom");
+            customCoverColorInput.value = customCoverColor;
+            updateCustomCoverPreview();
+            renderCustomGallery();
+
+            themeActionButtons.forEach((button) => {
+                const theme = passportThemes.find((item) => item.id === button.dataset.themeId);
+                const isUnlocked = unlockedThemeIds.includes(theme.id);
+                const isActive = citizenThemeIds[selectedCitizenId] === theme.id;
+
+                button.setAttribute("aria-pressed", String(isActive));
+                button.textContent = isActive ? "Используется" : isUnlocked ? "Выбрать" : `Открыть · ${formatTokens(theme.price)} жт.`;
+            });
+        };
+
+        const getBonusRemaining = () => Math.max(0, bonusCooldownMs - (Date.now() - bonusClaimedAt));
+        const formatBonusRemaining = (milliseconds) => {
+            const totalMinutes = Math.ceil(milliseconds / 60000);
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            return hours > 0 ? `${hours} ч ${String(minutes).padStart(2, "0")} мин.` : `${minutes} мин.`;
+        };
+        const updateBonusButton = () => {
+            const remaining = getBonusRemaining();
+            dailyBonusButton.disabled = remaining > 0;
+            dailyBonusButton.textContent = remaining > 0 ? `Через ${formatBonusRemaining(remaining)}` : `Забрать +${bonusAmount}`;
+        };
+
+        applyActiveTheme();
+        renderThemeShop();
+        renderAdminBalances();
+        window.setInterval(updateBonusButton, 60_000);
+
+        const compressCustomCover = (file) => new Promise((resolve, reject) => {
+            if (!file.type.startsWith("image/")) {
+                reject(new Error("Выбери файл изображения."));
+                return;
+            }
+
+            if (file.size > 8 * 1024 * 1024) {
+                reject(new Error("Изображение должно быть меньше 8 МБ."));
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onerror = () => reject(new Error("Не удалось прочитать изображение."));
+            reader.onload = () => {
+                const image = new Image();
+                image.onerror = () => reject(new Error("Этот файл не удалось открыть как изображение."));
+                image.onload = () => {
+                    const canvasWidth = 1200;
+                    const canvasHeight = 764;
+                    const scale = Math.max(canvasWidth / image.naturalWidth, canvasHeight / image.naturalHeight);
+                    const sourceWidth = canvasWidth / scale;
+                    const sourceHeight = canvasHeight / scale;
+                    const sourceX = (image.naturalWidth - sourceWidth) / 2;
+                    const sourceY = (image.naturalHeight - sourceHeight) / 2;
+                    const canvas = document.createElement("canvas");
+                    canvas.width = canvasWidth;
+                    canvas.height = canvasHeight;
+                    const context = canvas.getContext("2d");
+
+                    if (!context) {
+                        reject(new Error("Не удалось обработать изображение."));
+                        return;
+                    }
+
+                    context.fillStyle = customCoverColorInput.value;
+                    context.fillRect(0, 0, canvasWidth, canvasHeight);
+                    context.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, canvasWidth, canvasHeight);
+
+                    try {
+                        resolve(canvas.toDataURL("image/jpeg", 0.76));
+                    } catch {
+                        reject(new Error("Не удалось подготовить изображение."));
+                    }
+                };
+                image.src = String(reader.result);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        customCoverColorInput.addEventListener("input", () => {
+            updateCustomCoverPreview();
+            customCoverStatus.textContent = "Цвет выбран. Нажми «Применить обложку», чтобы сохранить дизайн.";
+        });
+
+        customCoverFileInput.addEventListener("change", async () => {
+            const file = customCoverFileInput.files[0];
+            if (!file) return;
+
+            customCoverButton.disabled = true;
+            customCoverStatus.textContent = "Подготавливаю изображение…";
+
+            try {
+                pendingCustomCoverImage = await compressCustomCover(file);
+                updateCustomCoverPreview();
+                customCoverStatus.textContent = "Фото готово. Нажми «Применить обложку», чтобы сохранить дизайн.";
+            } catch (error) {
+                pendingCustomCoverImage = null;
+                customCoverStatus.textContent = error.message;
+            } finally {
+                customCoverButton.disabled = !unlockedThemeIds.includes("custom");
+            }
+        });
+
+        customCoverButton.addEventListener("click", () => {
+            if (!unlockedThemeIds.includes("custom")) return;
+
+            customCoverColor = customCoverColorInput.value;
+            if (pendingCustomCoverImage) customCoverImage = pendingCustomCoverImage;
+            pendingCustomCoverImage = null;
+            activeThemeId = "custom";
+            citizenThemeIds[selectedCitizenId] = "custom";
+            customDesignsByCitizen[selectedCitizenId] = { color: customCoverColor, image: customCoverImage };
+            applyActiveTheme();
+            renderThemeShop();
+            renderCustomGallery();
+            themeShopStatus.textContent = "Твоя обложка сохранена и применена.";
+            customCoverStatus.textContent = "Дизайн сохранён в этом браузере.";
+            saveShopState();
+        });
+
+        adminCreditButton.addEventListener("click", () => {
+            const citizenId = adminCitizenSelect.value;
+            const amount = adminAmountInput.valueAsNumber;
+
+            if (!citizenIds.has(citizenId) || !Number.isSafeInteger(amount) || amount < 1 || amount > 1_000_000) {
+                adminStatus.textContent = "Укажи сумму от 1 до 1 000 000 жетонов.";
+                return;
+            }
+
+            citizenBalances[citizenId] = (citizenBalances[citizenId] || 0) + amount;
+            if (citizenId === selectedCitizenId) tokenBalance = citizenBalances[citizenId];
+            const citizenName = [...citizenButtons].find((button) => button.dataset.citizenId === citizenId).dataset.firstName;
+            adminStatus.textContent = `Начислено ${amount.toLocaleString("ru-RU")} жетонов гражданину ${citizenName}.`;
+            renderAdminBalances();
+            renderThemeShop();
+            saveShopState();
+        });
+
+        const activateViewTab = (tab, moveFocus = false) => {
+            const activePanelId = tab.getAttribute("aria-controls");
+
+            viewTabs.forEach((item) => {
+                const isActive = item === tab;
+                item.setAttribute("aria-selected", String(isActive));
+                item.tabIndex = isActive ? 0 : -1;
+            });
+            viewPanels.forEach((panel) => {
+                panel.hidden = panel.id !== activePanelId;
+            });
+            if (moveFocus) tab.focus();
+        };
+
+        viewTabs.forEach((tab) => {
+            tab.addEventListener("click", () => activateViewTab(tab));
+        });
+
+        viewTabList.addEventListener("keydown", (event) => {
+            const tabsNow = viewTabs.filter((tab) => !tab.hidden);
+            const currentIndex = tabsNow.indexOf(document.activeElement);
+            let nextIndex = currentIndex;
+
+            if (event.key === "ArrowRight") nextIndex = (currentIndex + 1) % tabsNow.length;
+            else if (event.key === "ArrowLeft") nextIndex = (currentIndex - 1 + tabsNow.length) % tabsNow.length;
+            else if (event.key === "Home") nextIndex = 0;
+            else if (event.key === "End") nextIndex = tabsNow.length - 1;
+            else return;
+
+            event.preventDefault();
+            activateViewTab(tabsNow[nextIndex], true);
+        });
+
+        themeActionButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                const theme = passportThemes.find((item) => item.id === button.dataset.themeId);
+                if (!theme) return;
+                const isUnlocked = unlockedThemeIds.includes(theme.id);
+
+                if (!isUnlocked && tokenBalance < theme.price) {
+                    themeShopStatus.textContent = `Не хватает ${theme.price - tokenBalance} жетонов. Вернись за бонусом через 4 часа.`;
+                    return;
+                }
+
+                if (!isUnlocked) {
+                    tokenBalance -= theme.price;
+                    citizenBalances[selectedCitizenId] = tokenBalance;
+                    unlockedThemeIds.push(theme.id);
+                    themeShopStatus.textContent = `Открыто оформление «${theme.name}».`;
+                } else {
+                    themeShopStatus.textContent = `Применено оформление «${theme.name}».`;
+                }
+
+                activeThemeId = theme.id;
+                citizenThemeIds[selectedCitizenId] = theme.id;
+                applyActiveTheme();
+                renderThemeShop();
+                saveShopState();
+            });
+        });
+
+        dailyBonusButton.addEventListener("click", () => {
+            if (getBonusRemaining() > 0) return;
+
+            tokenBalance += bonusAmount;
+            citizenBalances[selectedCitizenId] = tokenBalance;
+            bonusClaimedAt = Date.now();
+            themeShopStatus.textContent = `Получено ${bonusAmount} игровых жетонов. Следующий бонус через 4 часа.`;
+            renderThemeShop();
+            saveShopState();
+        });
+
+        sideToggle.addEventListener("click", () => {
+            const isBack = passportScene.classList.toggle("is-back");
+            sideToggle.setAttribute("aria-pressed", String(isBack));
+            sideLabel.textContent = isBack ? "Показать лицевую сторону" : "Показать оборот";
+            passportFront.setAttribute("aria-hidden", String(isBack));
+            passportBack.setAttribute("aria-hidden", String(!isBack));
+            passportBack.inert = !isBack;
+        });
+
+        const bindCitizenButton = (button) => {
+            button.addEventListener("click", () => {
+                selectedCitizenId = button.dataset.citizenId;
+                tokenBalance = citizenBalances[selectedCitizenId] || 0;
+                activeThemeId = citizenThemeIds[selectedCitizenId] || "garnet";
+                const selectedCustomDesign = customDesignsByCitizen[selectedCitizenId] || { color: defaultCustomColor, image: "" };
+                customCoverColor = selectedCustomDesign.color;
+                customCoverImage = selectedCustomDesign.image;
+                pendingCustomCoverImage = null;
+                customCoverFileInput.value = "";
+                givenName.textContent = button.dataset.firstName;
+                roleBadge.textContent = button.dataset.role;
+                surname.textContent = button.dataset.surname;
+                birthDate.textContent = button.dataset.birthDate;
+                passportNumber.textContent = `№ ${button.dataset.number}`;
+                archiveCode.textContent = button.dataset.archiveCode;
+                portrait.src = button.dataset.photo;
+                portrait.alt = button.dataset.photoAlt;
+                portrait.classList.toggle("portrait-closeup", button.dataset.closeup === "true");
+                showArchiveStory(Number(button.dataset.storyIndex));
+                citizenButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+                applyActiveTheme();
+                renderThemeShop();
+                renderAdminBalances();
+                saveShopState();
+            });
+        };
+        citizenButtons.forEach(bindCitizenButton);
+
+        citizenSearch.addEventListener("input", () => {
+            const query = citizenSearch.value.trim().toLocaleLowerCase("ru");
+            let visibleCount = 0;
+
+            citizenButtons.forEach((button) => {
+                const searchableText = `${button.dataset.firstName} ${button.dataset.surname} ${button.dataset.role}`.toLocaleLowerCase("ru");
+                const matches = searchableText.includes(query);
+
+                button.hidden = !matches;
+                if (matches) visibleCount += 1;
+            });
+
+            registryCount.textContent = String(visibleCount).padStart(2, "0");
+            registryEmpty.hidden = visibleCount > 0;
+        });
+
+        randomCitizenButton.addEventListener("click", () => {
+            let availableCitizens = [...citizenButtons].filter((button) => !button.hidden);
+
+            if (availableCitizens.length === 0) {
+                citizenSearch.value = "";
+                citizenSearch.dispatchEvent(new Event("input"));
+                availableCitizens = [...citizenButtons];
+            }
+
+            const unselectedCitizens = availableCitizens.filter((button) => button.getAttribute("aria-pressed") !== "true");
+            const selectionPool = unselectedCitizens.length > 0 ? unselectedCitizens : availableCitizens;
+            selectionPool[Math.floor(Math.random() * selectionPool.length)].click();
+        });
+
+        archiveStoryNext.addEventListener("click", () => {
+            showArchiveStory((currentStoryIndex + 1) % archiveStories.length);
+        });
+
+        archiveOracleNext.addEventListener("click", () => {
+            currentOracleIndex = (currentOracleIndex + 1) % oraclePredictions.length;
+            archiveOracleText.textContent = oraclePredictions[currentOracleIndex];
+            archiveOracleCount.textContent = `${String(currentOracleIndex + 1).padStart(2, "0")} / ${String(oraclePredictions.length).padStart(2, "0")}`;
+        });
+    </script>
+    <script>
+        (() => {
+            const $ = (s) => document.querySelector(s);
+            const authScreen = $("#auth-screen"), appShell = $("#app-shell"), topSession = $("#top-session");
+            const sessionName = $("#session-name"), message = $("#auth-message"), logoutButton = $("#logout-button");
+            const form = $("#register-form"), submit = form.querySelector(".auth-submit");
+            const adminSelect = $("#admin-citizen"), adminList = $(".admin-balances"), adminTab = $("#admin-tab"), archiveTab = $("#archive-tab");
+            const staffList = $("#admin-staff"), staffStatus = $("#admin-staff-status");
+            const uniqueRoles = ["Президент", "Вице-президент", "Премьер-министр", "Помощник президента", "Министр"];
+            const assignable = ["Вице-президент", "Премьер-министр", "Помощник президента", "Министр", "Врач", "Полицейский", "Учитель", "Судья", "Военный", "Журналист", "Учёный", "Гражданин"];
+            let col = null, uid = null, people = {}, entered = false;
+            const me = () => people[uid];
+            const isPresident = () => me()?.role === "Президент";
+            const holderOf = (role) => Object.entries(people).find(([, p]) => p.role === role);
+            const rnd = (len, digits) => Array.from(crypto.getRandomValues(new Uint8Array(len)), (n) => digits ? n % 10 : "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[n % 32]).join("");
+            const placeholderPhoto = (f, l) => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='300' height='400'><rect width='300' height='400' fill='#244c3d'/><text x='150' y='235' font-size='120' font-family='Georgia,serif' fill='#d4dfd1' text-anchor='middle'>${(f[0] + l[0]).toUpperCase().replace(/[<>&"']/g, "?")}</text></svg>`);
+            const resizePhoto = (file) => new Promise((ok, no) => {
+                const r = new FileReader(); r.onerror = no;
+                r.onload = () => { const im = new Image(); im.onerror = no; im.onload = () => {
+                    const k = Math.min(1, 360 / Math.max(im.width, im.height)), c = document.createElement("canvas");
+                    c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+                    c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", 0.75));
+                }; im.src = r.result; };
+                r.readAsDataURL(file);
+            });
+            const plural = (n) => (n % 10 === 1 && n % 100 !== 11) ? "запись" : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? "записи" : "записей";
+            const updateCounts = () => {
+                const t = citizenButtons.length, s = String(t).padStart(2, "0");
+                $("#registry-count").textContent = s;
+                $("#archive-tab .view-tab-count").textContent = `${s} ${plural(t)}`;
+            };
+            const refreshRoleOptions = () => {
+                const select = form.elements.jobRole;
+                for (const o of select.options) {
+                    if (!uniqueRoles.includes(o.value)) continue;
+                    const taken = Boolean(holderOf(o.value));
+                    o.disabled = taken; o.textContent = taken ? `${o.value} · место занято` : o.value;
+                }
+                if (select.selectedOptions[0]?.disabled) select.value = "Гражданин";
+            };
+            const staffFail = (e) => { staffStatus.textContent = `Не получилось: ${e.code === "permission_denied" || e.code === "not_granted" ? "для этого нужны права редактора страницы" : (e.message || e.code)}.`; };
+            const setRole = async (id, role) => {
+                const target = people[id];
+                if (!isPresident() || !target || target.role === "Президент" || role === "Президент") return;
+                const h = uniqueRoles.includes(role) ? holderOf(role) : null;
+                if (h && h[0] !== id) { staffStatus.textContent = `Должность «${role}» занята: ${h[1].firstName} ${h[1].lastName}. Сначала сделай его гражданином.`; refreshStaff(); return; }
+                try { await col.doc(id).update({ role }); staffStatus.textContent = `${target.firstName} ${target.lastName} теперь: ${role}.`; } catch (e) { staffFail(e); refreshStaff(); }
+            };
+            const kick = async (id, btn) => {
+                if (!isPresident() || id === uid) return;
+                if (btn.dataset.armed !== "1") { btn.dataset.armed = "1"; btn.textContent = "Точно исключить?"; setTimeout(() => { btn.dataset.armed = ""; btn.textContent = "Исключить"; }, 3000); return; }
+                try { await col.doc(id).delete(); staffStatus.textContent = "Гражданин исключён из реестра."; } catch (e) { staffFail(e); }
+            };
+            const refreshStaff = () => {
+                staffList.querySelectorAll(".admin-staff-row").forEach((row) => {
+                    const id = row.dataset.staffId, p = people[id], sel = row.querySelector("select");
+                    if (!p || sel.disabled) return;
+                    for (const o of sel.options) {
+                        const h = uniqueRoles.includes(o.value) ? holderOf(o.value) : null;
+                        const busyByOther = Boolean(h) && h[0] !== id;
+                        o.disabled = busyByOther; o.textContent = busyByOther ? `${o.value} · занято` : o.value;
+                    }
+                    sel.value = p.role || "Гражданин";
+                    row.querySelector(".admin-kick").disabled = id === uid;
+                });
+            };
+            const addStaffRow = (id, p) => {
+                const row = document.createElement("li"); row.className = "admin-staff-row"; row.dataset.staffId = id;
+                const name = document.createElement("span"); name.textContent = `${p.firstName} ${p.lastName}`;
+                const sel = document.createElement("select"); sel.className = "admin-staff-role";
+                sel.setAttribute("aria-label", `Должность: ${p.firstName} ${p.lastName}`);
+                if (p.role === "Президент") { sel.append(new Option("Президент", "Президент")); sel.disabled = true; }
+                else { assignable.forEach((r) => sel.append(new Option(r, r))); sel.addEventListener("change", () => setRole(id, sel.value)); }
+                const k = Object.assign(document.createElement("button"), { type: "button", className: "admin-kick", textContent: "Исключить" });
+                k.addEventListener("click", () => kick(id, k));
+                row.append(name, sel, k); staffList.append(row);
+            };
+            const addCitizen = (id, p) => {
+                const b = document.createElement("button"); b.className = "citizen-button"; b.type = "button"; b.setAttribute("aria-pressed", "false");
+                b.dataset.citizenId = id;
+                const n = document.createElement("span"); n.className = "citizen-button-name";
+                const r = document.createElement("span"); r.className = "citizen-button-role";
+                b.append(n, r); $(".citizen-buttons").append(b);
+                citizenButtons.push(b); citizenIds.add(id);
+                citizenBalances[id] = Number.isInteger(savedBalances[id]) ? Math.max(0, savedBalances[id]) : 600;
+                const t = savedCitizenThemes[id]; citizenThemeIds[id] = unlockedThemeIds.includes(t) ? t : "garnet";
+                const d = savedCustomDesigns[id] || {};
+                customDesignsByCitizen[id] = { color: /^#[0-9a-f]{6}$/i.test(d.color || "") ? d.color : defaultCustomColor, image: typeof d.image === "string" && d.image.startsWith("data:image/") && d.image.length <= 750000 ? d.image : "" };
+                bindCitizenButton(b);
+                const o = document.createElement("option"); o.value = id; adminSelect.append(o);
+                const li = document.createElement("li"); li.className = "admin-balance-row";
+                const strong = document.createElement("strong"), amt = document.createElement("span");
+                amt.dataset.adminBalance = id; amt.textContent = citizenBalances[id].toLocaleString("ru-RU");
+                strong.append(amt, " жт."); li.append(document.createElement("span"), strong); adminList.append(li);
+                addStaffRow(id, p);
+            };
+            const sync = () => {
+                [...citizenButtons].forEach((b) => {
+                    const id = b.dataset.citizenId;
+                    if (people[id]) return;
+                    const i = citizenButtons.indexOf(b); b.remove(); citizenButtons.splice(i, 1); citizenIds.delete(id);
+                    delete citizenBalances[id]; delete citizenThemeIds[id]; delete customDesignsByCitizen[id];
+                    [...adminSelect.options].find((o) => o.value === id)?.remove();
+                    document.querySelector(`[data-admin-balance="${id}"]`)?.closest("li")?.remove();
+                    staffList.querySelector(`[data-staff-id="${id}"]`)?.remove();
+                    if (b.getAttribute("aria-pressed") === "true" && me()) citizenButtons.find((x) => x.dataset.citizenId === uid)?.click();
+                });
+                for (const [id, p] of Object.entries(people)) {
+                    if (!citizenButtons.some((b) => b.dataset.citizenId === id)) addCitizen(id, p);
+                    const b = citizenButtons.find((x) => x.dataset.citizenId === id), role = p.role || "Гражданин";
+                    Object.assign(b.dataset, { firstName: p.firstName, surname: p.lastName, role, birthDate: p.birthDate, number: p.number, archiveCode: p.code, photo: p.photo, photoAlt: `Фото гражданина: ${p.firstName} ${p.lastName}`, closeup: "false", storyIndex: String(p.storyIndex || 0) });
+                    b.querySelector(".citizen-button-name").textContent = `${p.firstName} ${p.lastName}`;
+                    b.querySelector(".citizen-button-role").textContent = role;
+                    if (b.getAttribute("aria-pressed") === "true") roleBadge.textContent = role;
+                    const o = [...adminSelect.options].find((x) => x.value === id); if (o) o.textContent = `${p.firstName} ${p.lastName} · ${role}`;
+                    const lbl = document.querySelector(`[data-admin-balance="${id}"]`)?.closest("li")?.firstElementChild; if (lbl) lbl.textContent = `${p.firstName} ${p.lastName}`;
+                }
+                refreshRoleOptions(); refreshStaff(); updateCounts(); window.dispatchEvent(new CustomEvent("registry", { detail: { people, uid } }));
+                if (entered) {
+                    if (!me()) { entered = false; appShell.hidden = true; topSession.hidden = true; authScreen.hidden = false; message.textContent = "Твоя карточка удалена из реестра. Создай новую."; return; }
+                    sessionName.textContent = `${me().firstName} ${me().lastName} · ${me().role || "Гражданин"}`;
+                    adminTab.hidden = !isPresident();
+                    if (adminTab.hidden && adminTab.getAttribute("aria-selected") === "true") activateViewTab(archiveTab);
+                } else if (me()) enter();
+            };
+            const enter = () => {
+                entered = true; message.textContent = "";
+                authScreen.hidden = true; appShell.hidden = false; topSession.hidden = false;
+                sessionName.textContent = `${me().firstName} ${me().lastName} · ${me().role || "Гражданин"}`;
+                adminTab.hidden = !isPresident(); activateViewTab(archiveTab);
+                citizenSearch.value = ""; citizenSearch.dispatchEvent(new Event("input"));
+                citizenButtons.find((b) => b.dataset.citizenId === uid)?.click(); window.scrollTo(0, 0);
+            };
+            const register = async () => {
+                if (!col || submit.disabled) return;
+                const fail = (t) => { message.textContent = t; };
+                const firstName = form.firstName.value.trim(), lastName = form.lastName.value.trim(), jobRole = form.elements.jobRole.value;
+                let birth = form.birthDate.value.trim();
+                const dm = birth.match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/);
+                if (dm) birth = `${dm[3]}-${dm[2].padStart(2, "0")}-${dm[1].padStart(2, "0")}`;
+                const year = Number(birth.slice(0, 4));
+                if (firstName.length < 2) return fail("Введи имя (минимум 2 буквы).");
+                if (lastName.length < 2) return fail("Введи фамилию (минимум 2 буквы).");
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(birth) || year < 1900 || new Date(birth) > new Date()) return fail("Проверь дату рождения.");
+                const h = uniqueRoles.includes(jobRole) ? holderOf(jobRole) : null;
+                if (h) { refreshRoleOptions(); return fail(`Должность «${jobRole}» уже занята: ${h[1].firstName} ${h[1].lastName}.`); }
+                submit.disabled = true; fail("Создаю карточку…");
+                try {
+                    let photo; try { const f = form.portrait.files[0]; photo = f ? await resizePhoto(f) : placeholderPhoto(firstName, lastName); } catch { photo = placeholderPhoto(firstName, lastName); }
+                    const [y, m, d] = birth.split("-");
+                    const doc = { firstName, lastName, role: jobRole, birthDate: `${d}.${m}.${y}`, photo, number: `SKI ${rnd(4, true)} 2028`, code: `SKI-ARC-${(firstName[0] + lastName[0]).toUpperCase()}${String(year).slice(2)}-${rnd(4)}-${rnd(4)}-${rnd(4)}-${rnd(4)}`, storyIndex: Math.floor(Math.random() * 5), createdAt: Date.now() };
+                    await col.doc(uid).set(doc);
+                    people[uid] = doc; sync();
+                } catch (e) { fail(`Не получилось создать карточку: ${e.message || e.code}. Возможно, у тебя нет права редактировать страницу.`); }
+                finally { submit.disabled = false; }
+            };
+            submit.type = "button"; submit.addEventListener("click", register);
+            form.addEventListener("submit", (e) => e.preventDefault());
+            form.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.tagName === "INPUT" && e.target.type !== "file") { e.preventDefault(); register(); } });
+            logoutButton.hidden = true;
+            (async () => {
+                message.textContent = "Подключаюсь к реестру…";
+                try {
+                    const [db, user] = typeof claude === "undefined" ? [null, null] : await Promise.all([claude.use("db"), claude.use("user")]);
+                    uid = user ? await user.id() : null;
+                    if (!db || !uid) { message.textContent = "Общий реестр работает только на опубликованной странице: открой ссылку на claude.ai и войди в свой аккаунт."; submit.disabled = true; return; }
+                    col = db.collection("citizens");
+                    refreshRoleOptions(); message.textContent = "";
+                    col.onSnapshot((snap) => { people = {}; snap.docs.forEach((d) => { people[d.id] = d.data(); }); sync(); },
+                        (e) => { message.textContent = `Связь с реестром потеряна: ${e.message || e.code}`; });
+                } catch (e) { message.textContent = `Не удалось подключиться: ${e.message || e}`; }
+            })();
+        })();
+    </script>
+<script>
+        (() => {
+            const $ = (s) => document.querySelector(s);
+            let people = {}, uid = null, db = null, decrees = [], poll = null, votes = {};
+            const isPres = () => ["Президент", "Помощник президента"].includes(people[uid]?.role);
+            const status = (t) => { $("#empire-status").textContent = t; };
+            const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+            const parse = (d) => { const [dd, mm, yy] = String(d).split(".").map(Number); return { dd, mm, yy }; };
+            const word = (n, a, b, c) => (n % 10 === 1 && n % 100 !== 11) ? a : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? b : c;
+            const renderStats = () => {
+                const list = Object.values(people), box = $("#empire-stats"); box.replaceChildren();
+                const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const ages = list.map((p) => { const { dd, mm, yy } = parse(p.birthDate); let a = now.getFullYear() - yy; if (today < new Date(now.getFullYear(), mm - 1, dd)) a--; return a; });
+                let next = null;
+                list.forEach((p) => { const { dd, mm } = parse(p.birthDate); let d = new Date(now.getFullYear(), mm - 1, dd); if (d < today) d.setFullYear(d.getFullYear() + 1); const left = Math.round((d - today) / 864e5); if (!next || left < next.left) next = { left, p }; });
+                const stat = (value, label) => { const b = el("div", "stat-box"); b.append(el("strong", "", value), el("span", "", label)); box.append(b); };
+                stat(String(list.length), "граждан в реестре");
+                stat(ages.length ? String(Math.round(ages.reduce((a, b) => a + b, 0) / ages.length)) : "—", "средний возраст");
+                stat(`${list.filter((p) => ["Президент", "Вице-президент", "Премьер-министр", "Помощник президента", "Министр"].includes(p.role)).length} из 5`, "высших должностей занято");
+                stat(next ? (next.left === 0 ? "Сегодня!" : `${next.left} ${word(next.left, "день", "дня", "дней")}`) : "—", next ? `до дня рождения: ${next.p.firstName} ${next.p.lastName}` : "ближайший день рождения");
+            };
+            const renderDecrees = () => {
+                $("#decree-compose").hidden = !isPres();
+                const ul = $("#decree-list"); ul.replaceChildren();
+                if (!decrees.length) ul.append(el("li", "empty-note", "Указов пока нет."));
+                decrees.forEach((d) => {
+                    const li = el("li", "decree-item", d.text), meta = el("small"); meta.append(el("span", "", `${d.author} · ${new Date(d.createdAt).toLocaleDateString("ru-RU")}`));
+                    if (isPres()) { const x = el("button", "", "Отменить"); x.type = "button"; x.addEventListener("click", () => db.collection("decrees").doc(d.id).delete().catch((e) => status(`Не получилось: ${e.message || e.code}`))); meta.append(x); }
+                    li.append(meta); ul.append(li);
+                });
+            };
+            const renderPoll = () => {
+                const box = $("#poll-box"); box.replaceChildren(); $("#poll-admin").hidden = !isPres(); $("#poll-close").hidden = !poll;
+                if (!poll) { box.append(el("p", "empty-note", "Сейчас нет активного голосования.")); return; }
+                const mine = votes[uid]?.pollId === poll.createdAt ? votes[uid].choice : -1;
+                const counts = poll.options.map((_, i) => Object.values(votes).filter((v) => v.pollId === poll.createdAt && v.choice === i).length);
+                const total = counts.reduce((a, b) => a + b, 0);
+                box.append(el("p", "poll-q", poll.question));
+                poll.options.forEach((opt, i) => {
+                    const b = el("button", `poll-opt${mine === i ? " mine" : ""}`); b.type = "button";
+                    const bar = el("i"); bar.style.width = total ? `${Math.round(counts[i] / total * 100)}%` : "0";
+                    const row = el("span"); row.append(el("span", "", opt), el("span", "", `${counts[i]} · ${total ? Math.round(counts[i] / total * 100) : 0}%`));
+                    b.append(bar, row);
+                    b.addEventListener("click", () => db.collection("votes").doc(uid).set({ choice: i, pollId: poll.createdAt }).catch((e) => status(`Не получилось: ${e.message || e.code}`)));
+                    box.append(b);
+                });
+                box.append(el("p", "empty-note", mine < 0 ? `Проголосовало: ${total}. Выбери вариант.` : `Проголосовало: ${total}. Твой голос учтён, его можно изменить.`));
+            };
+            const renderAll = () => { renderStats(); renderDecrees(); renderPoll(); };
+            window.addEventListener("registry", (e) => { people = e.detail.people; uid = e.detail.uid; renderAll(); });
+            $("#decree-send").addEventListener("click", async () => {
+                const text = $("#decree-text").value.trim(); if (!db || !isPres() || text.length < 3) return status("Напиши текст указа (минимум 3 знака).");
+                const p = people[uid];
+                try { await db.collection("decrees").doc(`d${Date.now()}${Math.floor(Math.random() * 1000)}`).set({ text, author: `${p.firstName} ${p.lastName}`, createdAt: Date.now() }); $("#decree-text").value = ""; status("Указ издан."); } catch (e) { status(`Не получилось: ${e.message || e.code}`); }
+            });
+            $("#poll-create").addEventListener("click", async () => {
+                const q = $("#poll-q").value.trim(), options = ["#poll-a1", "#poll-a2", "#poll-a3"].map((s) => $(s).value.trim()).filter(Boolean);
+                if (!db || !isPres() || q.length < 3 || options.length < 2) return status("Нужен вопрос и минимум два варианта.");
+                try { await Promise.all(Object.keys(votes).map((id) => db.collection("votes").doc(id).delete())); await db.doc("polls/current").set({ question: q, options, createdAt: Date.now() }); ["#poll-q", "#poll-a1", "#poll-a2", "#poll-a3"].forEach((s) => { $(s).value = ""; }); status("Голосование началось."); } catch (e) { status(`Не получилось: ${e.message || e.code}`); }
+            });
+            $("#poll-close").addEventListener("click", () => db && isPres() && db.doc("polls/current").delete().catch((e) => status(`Не получилось: ${e.message || e.code}`)));
+            (async () => {
+                if (typeof claude === "undefined") return;
+                db = await claude.use("db"); if (!db) return;
+                db.collection("decrees").onSnapshot((s) => { decrees = s.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => b.createdAt - a.createdAt); renderDecrees(); });
+                db.doc("polls/current").onSnapshot((s) => { poll = s.exists ? s.data() : null; renderPoll(); });
+                db.collection("votes").onSnapshot((s) => { votes = {}; s.docs.forEach((d) => { votes[d.id] = d.data(); }); renderPoll(); });
+            })();
+        })();
+    </script>
+</body>
+</html>
